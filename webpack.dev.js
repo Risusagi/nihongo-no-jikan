@@ -7,7 +7,8 @@ module.exports = merge(common, {
     mode: 'development',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        publicPath: "/"
     },
     module: {
         rules: [
@@ -25,6 +26,7 @@ module.exports = merge(common, {
         new webpack.HotModuleReplacementPlugin()
     ],
     devServer: {
-        hot: true
+        hot: true,
+        historyApiFallback: true
     }
 });
