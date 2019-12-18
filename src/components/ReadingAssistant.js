@@ -3,11 +3,15 @@ import React from 'react';
 import Kuroshiro from 'kuroshiro';
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 
+import * as wanakana from "wanakana";
+
 import FuriganaForm from './FuriganaForm';
 
 class ReadingAssistant extends React.Component {
     state = {
-        convertedText: {__html: ''}
+        convertedText: {
+            __html: 'コーヒー しゃつ 本'
+        }
     }
 
     // initialize kuroshiro converter
@@ -50,6 +54,25 @@ class ReadingAssistant extends React.Component {
             this.handleNewLines('</p> <p>', convertionResult);
         }
 
+        // if format is hiragana and final code contains katakana add furigana to it, kuroshiro doesn't provide hiragana <-> katakana convertions
+        if (format === 'hiragana') {
+            this.resultCode = this.resultCode.split('').map((char, i, arr) => {
+                if(wanakana.isKatakana(char)) {
+                    return `
+                        <ruby>
+                            ${char}
+                            <rp>(</rp>
+                            <rt>
+                                ${wanakana.toHiragana(this.createTranscription(char, i, arr))}
+                            </rt>
+                            <rp>)</rp>
+                        </ruby>
+                    `;
+                } else {
+                    return char;
+                }
+            }).join('');
+        }
         // change state to show text with furigana to user (html code, not normal text)
         this.setState(prevState => (
             {
@@ -61,6 +84,33 @@ class ReadingAssistant extends React.Component {
 
     handleNewLines(newLineCode, codeToChange) {
         this.resultCode = codeToChange.replace(/\n(?!<\/rt>)/g, newLineCode);
+    }
+
+    createTranscription(char, i, arr) {
+        if (char === 'ー') {
+            // handle convertion of ー character to apropriate character
+
+            // convert previous character to romaji
+            const forTranscription = wanakana.toRomaji(arr[i - 1]);
+
+            // get vowel from previous character
+            let lastSound = forTranscription.substring(forTranscription.length - 1);
+
+            // change vowel accordingly to long vowels rules
+            // at that level users should know about it
+            switch (lastSound) {
+                case 'o':
+                    lastSound = 'u';
+                    break;
+                case 'e':
+                    lastSound = 'i';
+                    break;
+            }
+            
+            return lastSound;
+        } else {
+            return char;
+        }
     }
 
     render = () => {
