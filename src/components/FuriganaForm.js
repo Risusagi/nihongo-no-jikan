@@ -1,19 +1,16 @@
 import React from 'react';
 
-import FuriganaTypeInput from './FuriganaTypeInput';
-
-
 class FuriganaForm extends React.Component {
     state = {
         text: '',
-        // default value as in kuroshiro library ('to' option)
-        format: 'hiragana'
+        katakanaTranscription: true
     }
 
+    // event for textarea and one checkbox
     handleChange = (e) => {
-        const value = e.target.value;
-        // matches both format of furigana(hiragana, katakana, romaji) or text received from user
-        const property = e.target.type === 'textarea' ? 'text' : 'format';
+        const isTextArea = e.target.type === 'textarea';
+        const property = isTextArea ? 'text' : 'katakanaTranscription';
+        const value = isTextArea ? e.target.value : e.target.checked;
         
         this.setState(prevState => (
             {
@@ -32,7 +29,7 @@ class FuriganaForm extends React.Component {
         e.preventDefault();
 
         // send data to parent
-        this.props.handleTextConvertion(this.state.text, this.state.format);
+        this.props.handleTextConvertion(this.state.text, this.state.katakanaTranscription);
     }
 
     render = () => {
@@ -40,30 +37,15 @@ class FuriganaForm extends React.Component {
             <form
                 onSubmit={this.handleTextConvertion}
             >
-                <ul>
-                    <li>
-                        <FuriganaTypeInput
-                            type="romaji"
-                            format={this.state.format}
-                            onChange={this.handleChange}
-                        />
-                    </li>
-                    <li>
-                        <FuriganaTypeInput
-                            type="hiragana"
-                            format={this.state.format}
-                            onChange={this.handleChange}
-                        />
-                    </li>
-                    <li>
-                        <FuriganaTypeInput
-                            type="katakana"
-                            format={this.state.format}
-                            onChange={this.handleChange}
-                        />
-                    </li>
-                </ul>
-                
+                <label>
+                    Katakana transcription
+                    <input
+                        type="checkbox"
+                        checked={this.state.katakanaTranscription}
+                        onChange={this.handleChange}
+                    />
+                </label>
+
                 <textarea
                     onChange={this.handleChange}
                     value={this.state.text}

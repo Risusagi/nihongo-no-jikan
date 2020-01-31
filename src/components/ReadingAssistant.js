@@ -24,67 +24,59 @@ class ReadingAssistant extends React.Component {
         this.initializeKuroshiro();
     }
     
-    handleConvertion = async (text, format) => {
+    handleConvertion = async (text, createKatakanaTranscription) => {
         // if given text isn't in japanese don't try to convert it
         if (!Kuroshiro.Util.hasJapanese(text)) {
             alert("Given text doesn't contain Japanese");
             return;
         }
 
+        // convert text got from user via form element
         const convertionResult = await this.kuroshiro.convert(text, {
-            to: format,
-            mode: 'furigana',
-            // will be applied only for convertions to romaji
-            romajiSystem: 'hepburn'
+            to: 'hiragana',
+            mode: 'furigana'
         });
+                
+        // furigana in hiragana creates separated ruby for every kanji character and do nothing with katakana
+        let resultCode = this.handleNewLines(convertionResult);
         
-        
-        if (format === 'romaji') {
-            // romaji format creates only one ruby (default) that's why it is necessary to close it before the end of every paragraph
-            this.handleNewLines('</ruby></p> <p><ruby>', convertionResult);
-
-            // delete empty rt elements (with parentheses inside rp elements) to not show to users empty parentheses at the begininng of next pagaraphs if rt isn't supported by users' browsers
-            this.resultCode = this.resultCode.replace(/\<rp\>\(\<\/rp\>\<rt\>[\n\r]\<\/rt\>\<rp\>\)\<\/rp\>/g, '')
-
-            // replace all special symbols and numbers in furigana with spaces
-            // don't change to empty replacement (will create shift in furigana)
-                .replace(/<rp>\(<\/rp><rt>[0-9`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]<\/rt><rp>\)<\/rp>/g, '<rt> </rt>');
-        } else {
-            // hiragana and katakana create separated ruby for every kanji/kana character
-            this.handleNewLines('</p> <p>', convertionResult);
-        }
-
-        // if format is hiragana and final code contains katakana add furigana to it, kuroshiro doesn't provide hiragana <-> katakana convertions
-        if (format === 'hiragana') {
+        // kuroshiro doesn't provide hiragana <-> katakana convertions
+        // create transcription for katakana only if user wants it
+        if (createKatakanaTranscription) {
             const strings = [];
             let count = -1;
-            this.resultCode.split('').map((char, i, arr) => {                
+            resultCode.split('').map((char, i, arr) => {
+                // if character is in katakana
                 const isKat = wanakana.isKatakana(char);
                 if (isKat) {
+                    // if it is a first katakana character or previous character isn't katakana create new element inside the strings array
                     if (i === 0 || !wanakana.isKatakana(arr[i - 1])) {
                         count++;
-                        strings.push('');                        
+                        strings.push('');
                     }
+                    // add current character to currently created string
                     strings[count] += char;
                 }
             });
-        
+
+            // create ruby element for every katakana string
             for (let str of strings) {
                 const regExp = new RegExp('(?<!\<ruby\>)' + str)
-                this.resultCode = this.resultCode.replace(regExp, `<ruby>${str}<rp>(</rp><rt>${wanakana.toHiragana(str)}</rt><rp>)</rp></ruby>`);
+                resultCode = resultCode.replace(regExp, `<ruby>${str}<rp>(</rp><rt>${wanakana.toHiragana(str)}</rt><rp>)</rp></ruby>`);
             }
         }
+        
         // change state to show text with furigana to user (html code, not normal text)
         this.setState(prevState => (
             {
                 ...prevState,
-                convertedText: {__html: `<p>${this.resultCode}</p>`}
+                convertedText: {__html: `<p>${resultCode}</p>`}
             }
         ));
     }
 
-    handleNewLines(newLineCode, codeToChange) {
-        this.resultCode = codeToChange.replace(/\n(?!<\/rt>)/g, newLineCode);
+    handleNewLines(codeToChange) {
+        return codeToChange.replace(/\n(?!<\/rt>)/g, '</p> <p>');
     }
     render = () => {
         return (
