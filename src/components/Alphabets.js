@@ -1,22 +1,23 @@
 import React from 'react';
 import { toHiragana, toKatakana } from 'wanakana';
 import CharacterCard from './CharacterCard';
-
+import ModeSlider from './ModeSlider';
 
 class Alphabets extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            alphabet: 'hiragana'
-        }
-
+            alphabet: 'hiragana',
+            transcriptionMode: 'romaji'
+        };
+        
         this.transcriptions = [
             'a', 'i', 'u', 'e', 'o',
             'ka', 'ki', 'ku', 'ke', 'ko',
             'sa', 'shi', 'su', 'se', 'so',
-            'ta', 'chi', 'tsu', 'te', ' to',
-            'na', 'ni', ' nu', 'ne', 'no',
+            'ta', 'chi', 'tsu', 'te', 'to',
+            'na', 'ni', 'nu', 'ne', 'no',
             'ha', 'hi', 'fu', 'he', 'ho',
             'ma', 'mi', 'mu', 'me', 'mo',
             'ya', '', 'yu', '', 'yo',
@@ -26,49 +27,62 @@ class Alphabets extends React.Component {
         ];
     } 
 
-    handleAlphabetChoice = (e) => {
-        const alphabet = e.currentTarget.value;
-
+    // handle radio being controlled component
+    handleRadioChange = (property, value) => {
         this.setState(
             {
-                alphabet: alphabet
+                [property]: value
             }
         );
     }
 
+    // generate cards with hiragana/katakana symbol and its transcription accordingly to selected characters set (hiragana/katakana) and tranascription mode (romaji/hiragana)
     createCards() {
-        const cards = this.transcriptions.map((trans, i) => {
-                if(trans === '') return <div key={`empty${i}`}></div>;
+        const {alphabet, transcriptionMode} = this.state;
 
-                const character = this.state.alphabet === 'hiragana' ? toHiragana(trans) : toKatakana(trans);
-                return <CharacterCard character={character} transcription={trans} alphabet={this.state.alphabet}  key={`${trans}_${this.state.alphabet}`}/>  
+        return this.transcriptions.map((trans, i) => {
+            // return empty div for empty strings
+            if(trans === '') return <div key={`empty${i}`}></div>;
+
+            const character = alphabet === 'hiragana' ? toHiragana(trans) : toKatakana(trans);
+
+            let transcription = trans;
+            if (alphabet === 'katakana') {
+                transcription = transcriptionMode === 'romaji' ? trans : toHiragana(trans); 
+            }
+
+            return <CharacterCard character={character} transcription={transcription} alphabet={alphabet} key={`${trans}_${alphabet}`}/>  
         });
-
-        return cards;
     }
 
     render() {
+        const {alphabet, transcriptionMode} = this.state;
+
         return (
             <div>
                 <label>
                     Hiragana
                     <input
                         type="radio"
-                        checked={this.state.alphabet === 'hiragana'}
+                        checked={alphabet === 'hiragana'}
                         value='hiragana'
-                        onChange={this.handleAlphabetChoice}
+                        onChange={(e) => this.handleRadioChange('alphabet', e.currentTarget.value)}
                     />  
                 </label>
+
                 <label>
                     Katakana
                     <input
                         type="radio"
-                        checked={this.state.alphabet === 'katakana'}
+                        checked={alphabet === 'katakana'}
                         value='katakana'
-                        onChange={this.handleAlphabetChoice}
+                        onChange={(e) => this.handleRadioChange('alphabet', e.currentTarget.value)}
                     />  
                 </label>
                 
+                {/* render switch slider to select mode of transcription creation */}
+                {alphabet === 'katakana' && <ModeSlider changeMode={this.handleRadioChange} propertyToChange='transcriptionMode' mode={transcriptionMode} />}
+
                 <ul className='alphabet-table'>
                     {this.createCards()}
                 </ul>
