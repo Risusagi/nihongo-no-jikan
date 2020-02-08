@@ -69,9 +69,9 @@ const AlphabetsTest = (props) => {
     // values were set in ChoicePanel's componentDidMount
     // 0, 0, [{char: '', mode: ''}]
     useEffect(() => {
-        setScore(Number(sessionStorage.getItem('score')));
-        setProgress(Number(sessionStorage.getItem('current')));
-        setCharactersList(JSON.parse(sessionStorage.getItem('characters')));
+        if (score !== 0) setScore(Number(sessionStorage.getItem('score')));
+        if (currentQuestion !== 0) setProgress(Number(sessionStorage.getItem('current')));
+        if (characters[0].char) setCharactersList(JSON.parse(sessionStorage.getItem('characters')));
     }, []);
 
     // change score and current question's count only if its value was really changed (became different from zero) to not call every time when value is changed from 0 to 0
@@ -90,7 +90,6 @@ const AlphabetsTest = (props) => {
     }, [characters]);    
 
     const currSet = characters[currentQuestion];
-    
     return (
         <div>
             <Switch>

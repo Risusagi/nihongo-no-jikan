@@ -28,38 +28,37 @@ class ChoicePanel extends React.Component {
         // add changed checkbox's mode to modes list if it wasn't checked before change and delete it from the list if it was on it
         !modes.includes(selectedMode) ? modes.push(selectedMode) : modes = modes.filter(mode => mode !== selectedMode);
 
+        const msg = this.createMessage(modes);
+
         this.setState(
             {
-                modes: modes
-            },
-            () => this.createMessage()
+                modes: modes,
+                message: msg
+            }
         );
     }
 
     // render message accordigly to users choice of alphabet(s)
-    createMessage = () => {
-        const { modes } = this.state;
+    createMessage = (modes) => {
         const hiraganaSelected = modes.includes('hiragana');
         const katakanaSelected = modes.includes('katakana');
 
-        let alphabet = '';
-        if (hiraganaSelected && katakanaSelected) {
-            alphabet = 'hiragana and katakana';
-        } else if (hiraganaSelected) {
-            alphabet = 'hiragana';
-        } else if (katakanaSelected) {
-            alphabet = 'katakana';
-        }
+        const alphabet = this.selectAlphabet(hiraganaSelected, katakanaSelected);
 
-        const message = alphabet ? `You will get ${alphabet} quiz` : this.defaultMessage;
-
-        this.setState(
-            {
-                message: message
-            }
-        );    
+        return alphabet ? `You will get ${alphabet} quiz` : this.defaultMessage;
     }
 
+    selectAlphabet = (hir, kat) => {
+        if (hir && kat) {
+            return 'hiragana and katakana';
+        } else if (hir) {
+            return 'hiragana';
+        } else if (kat) {
+            return 'katakana';
+        }
+        return '';
+    }
+    
     handleSubmit = (e) => {
         e.preventDefault();
         
