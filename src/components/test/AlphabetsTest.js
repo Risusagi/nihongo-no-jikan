@@ -1,75 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { withRouter, BrowserRouter as Switch, Route, useRouteMatch} from 'react-router-dom';
 import Card from './Card';
 import ChoicePanel from './ChoicePanel';
 
-export default class AlphabetsTest extends React.Component {
-    state = {
-        questionsAmount: 0,
-        rightAnswers: 0,
-        cards: [],
-        currentQuestion: 0,
-        renderTest: false
+const AlphabetsTest = (props) => {
+    const [score, setScore] = useState(0);
+    const [currentQuestion, setProgress] = useState(0);
+    const [characters, setCharactersList] = useState([{char: '', mode: ''}]);
+    const match = useRouteMatch();
+
+    // switch to next question but don't change right answers amount, in case user gave wrong answer or none answers was got
+    const switchToNextQuestion = () => {
+        setProgress(currentQuestion + 1);
     }
-    
-    // if user's answer was correct increase count of right answers and switch to next card
-    handleAnswer = (rightAnswer) => {
-        if (!rightAnswer) return;
+
+    // if user's answer was correct increase count of right answers and switch to next card (in any case)
+    const handleAnswer = (rightAnswer, lastIndex) => {
+        if (rightAnswer) {
+            setScore(score + 1);
+            switchToNextQuestion();    
+        }
         
-        this.setState(prevState => (
-            {
-                ...prevState,
-                rightAnswers: prevState.rightAnswers + 1,
-                currentQuestion: prevState.currentQuestion + 1
-            }
-        ));
+        props.history.push(`${match.path}/${lastIndex + 1}`);
     }
 
-    // switch to next question but don't change right answers amount
-    switchToNextQuestion = () => {
-        this.setState(prevState => (
-            {
-                ...prevState,
-                currentQuestion: prevState.currentQuestion + 1
-            }
-        ));
-    }
-
-    // switch from the choice panel to a test's card
-    prepareTestBeforeRender = (modes) => {
-        this.setState(
-            {
-                renderTest: true
-            }
-        );
-        
-        this.createCards(modes);
-    }
-
-    createCards = (modes) => {
-        const characters = this.prepareCharactersSet(modes);
-        const cards = characters.map((set, i) => {
-            return (
-                <Card
-                    transcription={set.char}
-                    mode={set.mode}
-                    handleAnswer={this.handleAnswer}
-                    questionsAmount={characters.length}
-                    index={i + 1}
-                    key={`${set.char}`}
-                    switchAfterMistake={this.switchToNextQuestion}
-                />
-            )
-        });
-
-        this.setState(
-            {
-                cards: cards,
-                questionsAmount: characters.length
-            }
-        );
-    }
-
-    prepareCharactersSet = (modes) => {
+    // generate characters set accordingly to modes selected by user
+    const prepareCharactersSet = (modes) => {
         const charactersList = [
             'a', 'i', 'u', 'e', 'o',
             'ka', 'ki', 'ku', 'ke', 'ko',
@@ -94,40 +50,75 @@ export default class AlphabetsTest extends React.Component {
             ));
         });
 
-        const characters = charactersSets.flat();
+        const chars = charactersSets.flat();
         
         // mix characters
-        for (let i = 0; i < characters.length; i++) {
-            const currentChar = characters[i];
-            const randomInd = Math.floor(Math.random() * characters.length);
-            const randomChar = characters[randomInd];
+        for (let i = 0; i < chars.length; i++) {
+            const currentChar = chars[i];
+            const randomInd = Math.floor(Math.random() * chars.length);
+            const randomChar = chars[randomInd];
 
-            characters[i] = randomChar;
-            characters[randomInd] = currentChar;
+            chars[i] = randomChar;
+            chars[randomInd] = currentChar;
         }
-        return characters;
+
+        setCharactersList(chars);
     }
 
-    render() {
-        const { cards, currentQuestion, renderTest } = this.state;
+    // on component mount, after every first render (to handle page refreshes)
+    // values were set in ChoicePanel's componentDidMount
+    // 0, 0, [{char: '', mode: ''}]
+    useEffect(() => {
+        setScore(Number(sessionStorage.getItem('score')));
+        setProgress(Number(sessionStorage.getItem('current')));
+        setCharactersList(JSON.parse(sessionStorage.getItem('characters')));
+    }, []);
 
-        // if render of test isn't allowed render panel of selecting alphabet for test
-        // if it's allowed render proper card of test
-        return (
-            <div>
-                {
-                    !renderTest
-                    &&
-                    <ChoicePanel
-                        switchToTest={this.prepareTestBeforeRender}
+    // change score and current question's count only if its value was really changed (became different from zero) to not call every time when value is changed from 0 to 0
+    useEffect(() => {
+        if (score > 0) sessionStorage.setItem('score', score);
+    }, [score]);
+
+    useEffect(() => {
+        if (currentQuestion > 0) sessionStorage.setItem('current', currentQuestion);
+    }, [currentQuestion]);
+    
+    // save characters set in sessionStorage if it was created and set to characters state value
+    // do nothing if characters were set to [{char: '', mode: ''}] on component mount
+    useEffect(() => {
+        if (characters[0].char) sessionStorage.setItem('characters', JSON.stringify(characters));
+    }, [characters]);    
+
+    const currSet = characters[currentQuestion];
+    
+    return (
+        <div>
+            <Switch>
+                <Route path={`${match.path}`} exact>
+                   <ChoicePanel
+                        switchToTest={prepareCharactersSet}
+                    /> 
+                </Route>
+
+                <Route path={`${match.path}/:index`}>
+                    {/* card with current question */}
+                    <Card
+                        transcription={currSet.char}
+                        mode={currSet.mode}
+                        handleAnswer={handleAnswer}
+                        questionsAmount={characters.length}
+                        index={currentQuestion + 1}
+                        key={`${currSet.char}-${currSet.mode}`}
+                        switchAfterMistake={switchToNextQuestion}
                     />
-                }
+                </Route>
 
-                {/* card with current question */}
-                {
-                    renderTest && cards[currentQuestion]
-                }
-            </div>
-        );
-    }
-}
+                <Route path={`${match.path}/result`}>
+                    
+                </Route>
+            </Switch>
+        </div>
+    );
+};
+
+export default withRouter(AlphabetsTest);

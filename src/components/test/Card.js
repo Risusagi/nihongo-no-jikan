@@ -7,11 +7,11 @@ export default class Card extends React.Component {
 
         this.state = {
             character: this.props.transcription,
+            // user's answer
             answer: '',
             showAnswer: false
         }
     }
-
     handleChange = (e) => {
         const value = e.currentTarget.value;
 
@@ -29,7 +29,7 @@ export default class Card extends React.Component {
         if (this.state.showAnswer) this.props.switchAfterMistake();
 
         // if users answer is corrent (identical to current cards' symbol)
-        this.props.handleAnswer(this.state.character === this.state.answer);
+        this.props.handleAnswer(this.state.character === this.state.answer, this.props.index);
         
         // show right answer if given by user wasn't correct
         this.setState(
