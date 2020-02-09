@@ -15,9 +15,9 @@ class ChoicePanel extends React.Component {
     
     // set initial values of test parameters or reset them if they were set previously and then user cameback to choice panel page
     componentDidMount = () => {
-        sessionStorage.setItem('characters', JSON.stringify([{char: '', mode: ''}]));
         sessionStorage.setItem('score', 0);
         sessionStorage.setItem('current', 0);
+        sessionStorage.setItem('characters', JSON.stringify([{char: '', mode: ''}]));
     }
 
     // handle change of checkboxes status and mode for future test changes
@@ -63,10 +63,12 @@ class ChoicePanel extends React.Component {
         e.preventDefault();
         
         // if at least one alphabet was selected allow test rendering and create cards with the array of modes (inside AlphabetsTest)
-        if (this.state.modes.length) this.props.switchToTest(this.state.modes);
-
-        // change history object (change URL and update BrowserRouter) to switch to the first question of the quiz
-        this.props.history.push('/alphabets/test/1');
+        if (this.state.modes.length) {
+            this.props.switchToTest(this.state.modes);
+            
+            // change history object (change URL and update BrowserRouter) to switch to the first question of the quiz
+            this.props.history.push('/alphabets/test/q/1');
+        }
     }
     
     render() {

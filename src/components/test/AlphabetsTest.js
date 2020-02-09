@@ -2,26 +2,74 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, BrowserRouter as Switch, Route, useRouteMatch} from 'react-router-dom';
 import Card from './Card';
 import ChoicePanel from './ChoicePanel';
+import ResultBoard from './ResultBoard';
 
 const AlphabetsTest = (props) => {
     const [score, setScore] = useState(0);
     const [currentQuestion, setProgress] = useState(0);
     const [characters, setCharactersList] = useState([{char: '', mode: ''}]);
+    const [showAnswer, setAnswerDisplay] = useState(false);
     const match = useRouteMatch();
 
-    // switch to next question but don't change right answers amount, in case user gave wrong answer or none answers was got
-    const switchToNextQuestion = () => {
-        setProgress(currentQuestion + 1);
-    }
+    // on component mount, every time when page was refreshed
+    // values were set in ChoicePanel's componentDidMount (0, 0, [{char: '', mode: ''}]) and then can be changed
+    useEffect(() => {
+        setScore(Number(sessionStorage.getItem('score')));
+        setProgress(Number(sessionStorage.getItem('current')));
+        setCharactersList(JSON.parse(sessionStorage.getItem('characters')));
+    }, []);
+
+    // change score and current question's count only if its value was really changed (became different from zero) to not call every time when value is changed from 0 to 0
+    useEffect(() => {
+        if (score > 0) sessionStorage.setItem('score', score);
+    }, [score]);
+
+    useEffect(() => {
+        if (currentQuestion > 0) sessionStorage.setItem('current', currentQuestion);
+    }, [currentQuestion]);
+
+    // save characters set in sessionStorage if it was created and set to characters state value
+    // do nothing if characters were set to [{char: '', mode: ''}] on component mount
+    useEffect(() => {
+        if (characters[0].char) sessionStorage.setItem('characters', JSON.stringify(characters));
+    }, [characters]);
+
 
     // if user's answer was correct increase count of right answers and switch to next card (in any case)
     const handleAnswer = (rightAnswer, lastIndex) => {
+
+        // in case current question is the last one from the list
+
+        if (lastIndex === characters.length && rightAnswer) {
+            props.history.push(`${match.path}/result`);
+            setScore(score + 1);
+            return;
+        }
+        if (lastIndex === characters.length && showAnswer) {
+            props.history.push(`${match.path}/result`);
+            setAnswerDisplay(false);
+            return;
+        }
+
+        // second try to switch to the next question
+        // set progress here to not display next card before switch to next page
+        if (showAnswer) {
+            setProgress(currentQuestion + 1);
+            props.history.push(`${match.path}/q/${lastIndex + 1}`);
+            setAnswerDisplay(false);
+            return;
+        }
+
+        // first try to switch to the next question
+        // switch to next question if answer was correct
+        // show correct answer if usermade mistake, stay at current page
         if (rightAnswer) {
             setScore(score + 1);
-            switchToNextQuestion();    
+            setProgress(currentQuestion + 1);
+            props.history.push(`${match.path}/q/${lastIndex + 1}`);
+        } else {
+            setAnswerDisplay(true);
         }
-        
-        props.history.push(`${match.path}/${lastIndex + 1}`);
     }
 
     // generate characters set accordingly to modes selected by user
@@ -65,57 +113,32 @@ const AlphabetsTest = (props) => {
         setCharactersList(chars);
     }
 
-    // on component mount, after every first render (to handle page refreshes)
-    // values were set in ChoicePanel's componentDidMount
-    // 0, 0, [{char: '', mode: ''}]
-    useEffect(() => {
-        if (score !== 0) setScore(Number(sessionStorage.getItem('score')));
-        if (currentQuestion !== 0) setProgress(Number(sessionStorage.getItem('current')));
-        if (characters[0].char) setCharactersList(JSON.parse(sessionStorage.getItem('characters')));
-    }, []);
-
-    // change score and current question's count only if its value was really changed (became different from zero) to not call every time when value is changed from 0 to 0
-    useEffect(() => {
-        if (score > 0) sessionStorage.setItem('score', score);
-    }, [score]);
-
-    useEffect(() => {
-        if (currentQuestion > 0) sessionStorage.setItem('current', currentQuestion);
-    }, [currentQuestion]);
-    
-    // save characters set in sessionStorage if it was created and set to characters state value
-    // do nothing if characters were set to [{char: '', mode: ''}] on component mount
-    useEffect(() => {
-        if (characters[0].char) sessionStorage.setItem('characters', JSON.stringify(characters));
-    }, [characters]);    
-
     const currSet = characters[currentQuestion];
+    
     return (
         <div>
-            <Switch>
-                <Route path={`${match.path}`} exact>
-                   <ChoicePanel
-                        switchToTest={prepareCharactersSet}
-                    /> 
-                </Route>
+            <Route path={`${match.path}`} exact>
+                <ChoicePanel
+                    switchToTest={prepareCharactersSet}
+                />
+            </Route>
 
-                <Route path={`${match.path}/:index`}>
-                    {/* card with current question */}
-                    <Card
-                        transcription={currSet.char}
-                        mode={currSet.mode}
-                        handleAnswer={handleAnswer}
-                        questionsAmount={characters.length}
-                        index={currentQuestion + 1}
-                        key={`${currSet.char}-${currSet.mode}`}
-                        switchAfterMistake={switchToNextQuestion}
-                    />
-                </Route>
-
-                <Route path={`${match.path}/result`}>
-                    
-                </Route>
-            </Switch>
+            <Route path={`${match.path}/q/:index`}>
+                {/* card with current question */}
+                <Card
+                    transcription={currSet.char}
+                    mode={currSet.mode}
+                    handleAnswer={handleAnswer}
+                    questionsAmount={characters.length}
+                    index={currentQuestion + 1}
+                    key={`${currSet.char}-${currSet.mode}`}
+                    showAnswer={showAnswer}
+                />
+            </Route>
+            
+            <Route path={`${match.path}/result`}>
+                <ResultBoard score={score} max={characters.length}/>
+            </Route>
         </div>
     );
 };

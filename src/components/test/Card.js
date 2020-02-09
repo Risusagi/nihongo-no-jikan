@@ -9,7 +9,7 @@ export default class Card extends React.Component {
             character: this.props.transcription,
             // user's answer
             answer: '',
-            showAnswer: false
+            showAnswer: this.props.showAnswer
         }
     }
     handleChange = (e) => {
@@ -24,17 +24,15 @@ export default class Card extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        
-        // switch to next question without increasing count of right answers
-        if (this.state.showAnswer) this.props.switchAfterMistake();
 
-        // if users answer is corrent (identical to current cards' symbol)
+        //show right answer or switch to next question depend on users answer (if it is identical to current cards' symbol)
         this.props.handleAnswer(this.state.character === this.state.answer, this.props.index);
+
         
         // show right answer if given by user wasn't correct
         this.setState(
             {
-                showAnswer: this.state.character !== this.state.answer
+                showAnswer: !this.props.showAnswer
             }
         );
     }
@@ -54,7 +52,7 @@ export default class Card extends React.Component {
 
                 {/* show correct answer to question if user made mistake */}
                 {
-                    this.state.showAnswer
+                    this.props.showAnswer
                     &&
                     <div>
                         {this.state.character}
@@ -69,6 +67,7 @@ export default class Card extends React.Component {
                         placeholder="Romaji"
                         value={this.state.answer}
                         onChange={this.handleChange}
+                        autoFocus
                     />
 
                     <button type="submit">Next</button>
