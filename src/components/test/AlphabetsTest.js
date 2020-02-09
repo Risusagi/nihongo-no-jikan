@@ -113,6 +113,15 @@ const AlphabetsTest = (props) => {
         setCharactersList(chars);
     }
 
+    // clear all statistics every time user switches to test's choice panel
+    const clearStatistics = () => {
+        setScore(0);
+        setProgress(0);
+        setCharactersList([{char: '', mode: ''}]);
+        setAnswerDisplay(false);
+        sessionStorage.setItem('points', 0);
+    }
+
     const currSet = characters[currentQuestion];
     
     return (
@@ -120,6 +129,7 @@ const AlphabetsTest = (props) => {
             <Route path={`${match.path}`} exact>
                 <ChoicePanel
                     switchToTest={prepareCharactersSet}
+                    clearStatistics={clearStatistics}
                 />
             </Route>
 

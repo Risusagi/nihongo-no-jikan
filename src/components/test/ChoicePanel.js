@@ -18,6 +18,8 @@ class ChoicePanel extends React.Component {
         sessionStorage.setItem('score', 0);
         sessionStorage.setItem('current', 0);
         sessionStorage.setItem('characters', JSON.stringify([{char: '', mode: ''}]));
+
+        this.props.clearStatistics();
     }
 
     // handle change of checkboxes status and mode for future test changes
