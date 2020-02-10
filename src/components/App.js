@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Nav from './Nav';
 import HomePage from './HomePage';
 import Alphabets from './Alphabets';
-import KanjiSearch from './KanjiSearch';
+import KanjiSearch from './kanjiSearch/KanjiSearch';
 import RomajiConverter from './RomajiConverter';
 import ReadingAssistant from './ReadingAssistant';
 
