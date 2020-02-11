@@ -9,12 +9,25 @@ class KanjiSearch extends React.Component {
         results: [],
         noResults: false
     }
-    
+
+    componentDidMount = () => {
+        const showResults = sessionStorage.getItem('inquiry') ? true : false;
+        
+        this.setState({
+            inquiry: sessionStorage.getItem('inquiry') || '',
+            searchMode: sessionStorage.getItem('mode') || 'english',
+            noResults: showResults
+        });
+    }
+
     // handle search input or selection changes (user's inquiry or mode of search)
     handleChange = (e) => {
         const property = e.currentTarget.type === 'text' ? 'inquiry' : 'searchMode';
 
         const value = e.currentTarget.value;
+
+        // save mode in session storage every time it is changed (to not lose it when page would be refreshed)
+        if (e.currentTarget.type === 'select-one') sessionStorage.setItem('mode', value);
 
         this.setState({
             [property]: value
@@ -24,12 +37,17 @@ class KanjiSearch extends React.Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!this.state.inquiry) return;
+
+        sessionStorage.setItem('inquiry', this.state.inquiry.toLowerCase());
+
         if (this.state.searchMode === 'english') {
             // search with english meaning return poor information about kanji (kanji + its radical)
             // returns empty array if nothing was found
+            // kanji alive can't find results if search request wasn't written in lower case
             const data = await kanjiAlive.get('/search/advanced', {
                 params: {
-                    kem: this.state.inquiry
+                    kem: this.state.inquiry.toLowerCase()
                 }
             });
             
@@ -84,6 +102,16 @@ class KanjiSearch extends React.Component {
         });
     }
 
+    handleReset = () => {
+        sessionStorage.setItem('inquiry', '');
+
+        this.setState({
+            inquiry: '',
+            results: [],
+            noResults: false
+        });
+    }
+
     render() {
         return (
             <div>
@@ -95,6 +123,13 @@ class KanjiSearch extends React.Component {
                         value={this.state.inquiry}
                         onChange={this.handleChange}
                     />
+
+                    <button
+                        type="button"
+                        onClick={this.handleReset}
+                    >
+                        Reset
+                    </button>
 
                     <select
                         value={this.state.searchMode}
@@ -115,7 +150,7 @@ class KanjiSearch extends React.Component {
                 {/* // if nothing was found display message about lack of answers for user's request */}
                 <div>
                     {this.state.noResults ? (
-                        'Sorry, nothing was found'    
+                        'Nothing found'    
                         ) : (
                             <ul>
                                 {this.state.results}
