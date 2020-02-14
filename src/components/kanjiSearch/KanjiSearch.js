@@ -1,11 +1,14 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import kanjiAlive from './kanjiAlive';
 import KanjiPreview from './KanjiPreview';
+import KanjiDetails from './KanjiDetails';
 
 class KanjiSearch extends React.Component {
     state = {
         inquiry: '',
         searchMode: 'english',
+        data: [],
         results: [],
         noResults: false
     }
@@ -97,6 +100,7 @@ class KanjiSearch extends React.Component {
         });
 
         this.setState({
+            data: results,
             results: resultsList,
             noResults: false
         });
@@ -115,49 +119,59 @@ class KanjiSearch extends React.Component {
     render() {
         return (
             <div>
-                <form
-                    onSubmit={this.handleSubmit}
-                >
-                    <input
-                        type="text"
-                        value={this.state.inquiry}
-                        onChange={this.handleChange}
-                    />
+                <Switch>
+                    <Route path={`${this.props.match.path}`} exact>
+                        <form
+                            onSubmit={this.handleSubmit}
+                        >
+                            <input
+                                type="text"
+                                value={this.state.inquiry}
+                                onChange={this.handleChange}
+                            />
 
-                    <button
-                        type="button"
-                        onClick={this.handleReset}
-                    >
-                        Reset
-                    </button>
+                            <button
+                                type="button"
+                                onClick={this.handleReset}
+                            >
+                                Reset
+                            </button>
 
-                    <select
-                        value={this.state.searchMode}
-                        onChange={this.handleChange}
-                    >
-                        <option value="english">
-                            English meaning
-                        </option>
+                            <select
+                                value={this.state.searchMode}
+                                onChange={this.handleChange}
+                            >
+                                <option value="english">
+                                    English meaning
+                                </option>
 
-                        <option value="kanji">
-                            Kanji character
-                        </option>
-                    </select>
+                                <option value="kanji">
+                                    Kanji character
+                                </option>
+                            </select>
 
-                    <button type="submit">Search</button>
-                </form>
+                            <button type="submit">Search</button>
+                        </form>
 
-                {/* // if nothing was found display message about lack of answers for user's request */}
-                <div>
-                    {this.state.noResults ? (
-                        'Nothing found'    
-                        ) : (
-                            <ul>
-                                {this.state.results}
-                            </ul>
-                        )
-                    }
-                </div>
+                        {/* // if nothing was found display message about lack of answers for user's request */}
+                        <div>
+                            {this.state.noResults ? (
+                                'Nothing found'    
+                                ) : (
+                                    <ul>
+                                        {this.state.results}
+                                    </ul>
+                                )
+                            }
+                        </div>    
+                    </Route>
+
+                    <Route path={`${this.props.match.path}/view/:kanji`}>
+                        <KanjiDetails
+                            allCharacters={this.state.data}
+                        />
+                    </Route>
+                </Switch>
             </div>
         );
     }

@@ -1,6 +1,7 @@
 import React from 'react';
-import ListItem from './ListItem';
+import { withRouter } from 'react-router-dom';
 import { toRomaji } from 'wanakana';
+import ListItem from './ListItem';
 
 const KanjiPreview = (props) => {
     const { kanji, radical, strokes, meanings, onyomi, kunyomi } = props;
@@ -9,7 +10,7 @@ const KanjiPreview = (props) => {
     const prepareItems = (items, convertionRequired = false) => {
         return items
         .replace(/([,、])\s/g, '$1')
-        .replace(/n\/a/g, '') //for cases when pronunciation
+        .replace(/n\/a/g, '') //for cases when pronunciation isn't available
         .split(/[,、]/).map((item, i) => {
             if (!item) return;
             return (
@@ -20,6 +21,10 @@ const KanjiPreview = (props) => {
             );
 
         });
+    }
+
+    const showMore = () => {
+        props.history.push(`${props.match.path}/view/${kanji}`);
     }
 
     return (
@@ -53,8 +58,14 @@ const KanjiPreview = (props) => {
                     {prepareItems(kunyomi,true)}
                 </ul>
             </div>
+
+            <button
+                onClick={showMore}
+            >
+                Details
+            </button>
         </li>
     )
 };
 
-export default KanjiPreview;
+export default withRouter(KanjiPreview);
