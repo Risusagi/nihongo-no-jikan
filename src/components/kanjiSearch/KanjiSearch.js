@@ -25,6 +25,10 @@ class KanjiSearch extends React.Component {
         this.renderSearchResults(JSON.parse(sessionStorage.getItem('results')) || []);
     }
 
+    componentWillUnmount = () => {
+        sessionStorage.clear();
+    }
+
     // handle search input or selection changes (user's inquiry or mode of search)
     handleChange = (e) => {
         const property = e.currentTarget.type === 'text' ? 'inquiry' : 'searchMode';
@@ -131,6 +135,20 @@ class KanjiSearch extends React.Component {
         });
     }
 
+    fullReset = () => {
+        // reset state when page is switched to kanji's details
+        this.setState({
+            inquiry: '',
+            searchMode: 'english',
+            data: [],
+            results: [],
+            noResults: false,
+            showSpiner: false
+        });
+        // go to KanjiDetails -> switch to KanjiSearch -> refresh page -> results from the previous search would be rendered if storage isn't cleared
+        sessionStorage.clear();
+    }
+
     render() {
         return (
             <div>
@@ -186,6 +204,7 @@ class KanjiSearch extends React.Component {
                     <Route path={`${this.props.match.path}/view/:kanji`}>
                         <KanjiDetails
                             allCharacters={this.state.data}
+                            resetKanjiSearch={this.fullReset}
                         />
                     </Route>
                 </Switch>

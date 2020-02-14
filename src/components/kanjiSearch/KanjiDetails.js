@@ -25,6 +25,8 @@ class KanjiDetails extends Component {
                 characterData: result.data
             });
         }
+
+        this.props.resetKanjiSearch();
     }
 
     // render video element with source tags for all available versions of video format except poster
