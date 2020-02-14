@@ -10,7 +10,8 @@ class KanjiSearch extends React.Component {
         searchMode: 'english',
         data: [],
         results: [],
-        noResults: false
+        noResults: false,
+        showSpiner: false
     }
 
     componentDidMount = () => {
@@ -40,6 +41,10 @@ class KanjiSearch extends React.Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            showSpiner: true
+        });
 
         // save inquiry
         sessionStorage.setItem('inquiry', this.state.inquiry.toLowerCase());
@@ -83,7 +88,8 @@ class KanjiSearch extends React.Component {
             sessionStorage.removeItem('results');
             
             this.setState({
-                noResults: true
+                noResults: true,
+                showSpiner: false
             });
             return;
         }
@@ -108,7 +114,8 @@ class KanjiSearch extends React.Component {
         this.setState({
             data: results,
             results: resultsList,
-            noResults: false
+            noResults: false,
+            showSpiner: false
         });
     }
 
@@ -163,8 +170,10 @@ class KanjiSearch extends React.Component {
 
                         {/* // if nothing was found display message about lack of answers for user's request */}
                         <div>
-                            {this.state.noResults ? (
-                                'Nothing found'    
+                            {this.state.showSpiner ? (
+                                    'spiner'
+                                ) : this.state.noResults ? (
+                                    'Nothing found'
                                 ) : (
                                     <ul>
                                         {this.state.results}
