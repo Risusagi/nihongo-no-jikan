@@ -14,13 +14,14 @@ class KanjiSearch extends React.Component {
     }
 
     componentDidMount = () => {
-        const showResults = sessionStorage.getItem('inquiry') ? true : false;
-        
+        // set request's textand mode if they were saved previously (before page was rerendered), otherwise set values to initial ones
         this.setState({
             inquiry: sessionStorage.getItem('inquiry') || '',
-            searchMode: sessionStorage.getItem('mode') || 'english',
-            noResults: showResults
+            searchMode: sessionStorage.getItem('mode') || 'english'
         });
+
+        // render results of the search if they were saved before, set data for KanjiDetails render and set noResults accordingly to results appearance
+        this.renderSearchResults(JSON.parse(sessionStorage.getItem('results')) || []);
     }
 
     // handle search input or selection changes (user's inquiry or mode of search)
@@ -40,8 +41,7 @@ class KanjiSearch extends React.Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!this.state.inquiry) return;
-
+        // save inquiry
         sessionStorage.setItem('inquiry', this.state.inquiry.toLowerCase());
 
         if (this.state.searchMode === 'english') {
@@ -64,6 +64,7 @@ class KanjiSearch extends React.Component {
             );
             
             this.renderSearchResults(fullData);
+            if (fullData.length) sessionStorage.setItem('results', JSON.stringify(fullData));
 
         } else {
             // search by kanji returns full information about one kanji
@@ -71,11 +72,16 @@ class KanjiSearch extends React.Component {
             const data = await kanjiAlive.get(`/kanji/${this.state.inquiry}`);
 
             this.renderSearchResults([data.data]);
+            if(!data.data.error) sessionStorage.setItem('results', JSON.stringify([data.data]));
         }
     }
 
     renderSearchResults = (results) => {
-        if (!results.length || results[0].error) {
+        // if anything was searched and nothing was found show message that nothing was found
+        // check both state and storage as state can be not set yet after page was rerendered
+        if ((!results.length || results[0].error) && (this.state.inquiry || sessionStorage.getItem('inquiry'))) {
+            sessionStorage.removeItem('results');
+            
             this.setState({
                 noResults: true
             });
@@ -107,7 +113,9 @@ class KanjiSearch extends React.Component {
     }
 
     handleReset = () => {
-        sessionStorage.setItem('inquiry', '');
+        // clear storage to not save inquiry and results of search to not render them if page would be refreshed between the moment of reset and aubmiting form one more time
+        sessionStorage.removeItem('inquiry');
+        sessionStorage.removeItem('results');
 
         this.setState({
             inquiry: '',
