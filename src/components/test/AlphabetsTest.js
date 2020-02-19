@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, BrowserRouter as Switch, Route, useRouteMatch} from 'react-router-dom';
+import { withRouter, Route, useRouteMatch} from 'react-router-dom';
 import Card from './Card';
 import ChoicePanel from './ChoicePanel';
 import ResultBoard from './ResultBoard';
+import Page404 from '../Page404';
 
 const AlphabetsTest = (props) => {
     const [score, setScore] = useState(0);
@@ -134,16 +135,23 @@ const AlphabetsTest = (props) => {
             </Route>
 
             <Route path={`${match.path}/q/:index`}>
-                {/* card with current question */}
-                <Card
-                    transcription={currSet.char}
-                    mode={currSet.mode}
-                    handleAnswer={handleAnswer}
-                    questionsAmount={characters.length}
-                    index={currentQuestion + 1}
-                    key={`${currSet.char}-${currSet.mode}`}
-                    showAnswer={showAnswer}
-                />
+                {
+                    characters[0].char ? (
+                    /* card with current question */
+                        <Card
+                            transcription={currSet.char}
+                            mode={currSet.mode}
+                            handleAnswer={handleAnswer}
+                            questionsAmount={characters.length}
+                            index={currentQuestion + 1}
+                            key={`${currSet.char}-${currSet.mode}`}
+                            showAnswer={showAnswer}
+                        />    
+                    ) : (
+                        <Page404 />
+                    )
+                }
+                
             </Route>
             
             <Route path={`${match.path}/result`}>

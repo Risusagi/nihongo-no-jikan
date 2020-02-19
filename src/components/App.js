@@ -8,6 +8,7 @@ import AlphabetsTest from './test/AlphabetsTest';
 import KanjiSearch from './KanjiSearch';
 import RomajiConverter from './RomajiConverter';
 import ReadingAssistant from './ReadingAssistant';
+import Page404 from './Page404';
 
 const App = () => {
     return (
@@ -21,8 +22,8 @@ const App = () => {
                     <Route path="/kanjiSearch" component={KanjiSearch} />
                     <Route path="/romajiConverter" component={RomajiConverter} />
                     <Route path="/readingAssistant" component={ReadingAssistant} />
+                    <Route component={Page404} />
                 </Switch>
-                
             </div>
         </Router>
     );
