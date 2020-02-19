@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Nav from './Nav';
 import HomePage from './HomePage';
-import Alphabets from './Alphabets';
+import Alphabets from './alphabets/Alphabets';
 import AlphabetsTest from './test/AlphabetsTest';
 import KanjiSearch from './kanjiSearch/KanjiSearch';
-import RomajiConverter from './RomajiConverter';
-import ReadingAssistant from './ReadingAssistant';
+import RomajiConverter from './romajiConverter/RomajiConverter';
+import ReadingAssistant from './readingAssistant/ReadingAssistant';
 import Page404 from './Page404';
 
 const App = () => {
