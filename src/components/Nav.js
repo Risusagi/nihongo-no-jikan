@@ -8,10 +8,19 @@ const Nav = () => {
                 <Link to="/">
                   <li>Home</li>  
                 </Link>
-
-                <Link to="/alphabets">
-                    <li>Alphabets</li>
-                </Link>
+                
+                <li>
+                    Alphabets
+                    <ul>
+                        <Link to="/alphabets/tabels">
+                            <li>Tabels</li>
+                        </Link>
+                        <Link to="/alphabets/test">
+                            <li>Test</li>
+                        </Link>
+                        
+                    </ul>
+                </li>
 
                 <Link to="/romajiConverter">
                     <li>Romaji Converter</li>
@@ -21,7 +30,7 @@ const Nav = () => {
                     <li>Kanji Search</li>
                 </Link>
 
-                <Link to="readingAssistant">
+                <Link to="/readingAssistant">
                     <li>Reading Assistant</li>
                 </Link>
             </ul>
