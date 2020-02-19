@@ -5,7 +5,7 @@ import Nav from './Nav';
 import HomePage from './HomePage';
 import Alphabets from './Alphabets';
 import AlphabetsTest from './test/AlphabetsTest';
-import KanjiSearch from './KanjiSearch';
+import KanjiSearch from './kanjiSearch/KanjiSearch';
 import RomajiConverter from './RomajiConverter';
 import ReadingAssistant from './ReadingAssistant';
 import Page404 from './Page404';
