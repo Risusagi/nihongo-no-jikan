@@ -50,9 +50,6 @@ class KanjiSearch extends React.Component {
             showSpiner: true
         });
 
-        // save inquiry
-        sessionStorage.setItem('inquiry', this.state.inquiry.toLowerCase());
-
         if (this.state.searchMode === 'english') {
             // search with english meaning return poor information about kanji (kanji + its radical)
             // returns empty array if nothing was found
@@ -83,6 +80,9 @@ class KanjiSearch extends React.Component {
             this.renderSearchResults([data.data]);
             if(!data.data.error) sessionStorage.setItem('results', JSON.stringify([data.data]));
         }
+
+        // save inquiry
+        sessionStorage.setItem('inquiry', this.state.inquiry.toLowerCase());
     }
 
     renderSearchResults = (results) => {
