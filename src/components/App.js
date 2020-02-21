@@ -15,15 +15,17 @@ const App = () => {
         <Router>
             <div>
                 <Nav />
-                <Switch>
-                    <Route path="/" exact component={HomePage} />
-                    <Route path="/alphabets/tabels" component={Alphabets} />
-                    <Route path="/alphabets/test" component={AlphabetsTest} />
-                    <Route path="/kanjiSearch" component={KanjiSearch} />
-                    <Route path="/romajiConverter" component={RomajiConverter} />
-                    <Route path="/readingAssistant" component={ReadingAssistant} />
-                    <Route component={Page404} />
-                </Switch>
+                <div className="content">
+                    <Switch>
+                        <Route path="/" exact component={HomePage} />
+                        <Route path="/alphabets/tabels" component={Alphabets} />
+                        <Route path="/alphabets/test" component={AlphabetsTest} />
+                        <Route path="/kanjiSearch" component={KanjiSearch} />
+                        <Route path="/romajiConverter" component={RomajiConverter} />
+                        <Route path="/readingAssistant" component={ReadingAssistant} />
+                        <Route component={Page404} />
+                    </Switch>
+                </div>
             </div>
         </Router>
     );

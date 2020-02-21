@@ -1,0 +1,182 @@
+@import '/node_modules/modern-normalize/modern-normalize.css';
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP:400,500,700&display=swap&subset=japanese');
+@import url('https://fonts.googleapis.com/css?family=Merienda:700&display=swap');
+
+@import './alphabetsMain.scss';
+
+$text-color: #2f1728;
+$nav-hover: #ffaaacd3;
+
+* {
+    color: $text-color;
+}
+
+body {
+    font-family: 'Noto Sans JP', Arial, Helvetica, sans-serif;
+    background-color: #fff5d7;
+}
+
+a {
+    text-decoration: none;
+}
+
+.navigation-panel {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #fff5d7;
+}
+
+// NNJ
+.logo {
+    display: inline-block;
+    margin: 10px 0 0 5vw;
+
+    a {
+        font-family: 'Merienda', cursive;
+        font-size: 30px;
+        color: #951f41;
+        text-shadow: 1px 1px #951f41,
+                1px -1px #951f41,
+                -1px 1px #951f41,
+                -1px -1px #951f41;
+        letter-spacing: 3px;
+    }
+}
+
+// menu icon
+svg {
+    position: absolute;
+    top: 5px;
+    right: 5vw;
+    width: 45px;
+    height: 45px;
+    stroke: $text-color;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: miter;
+    fill: none;
+    color: $text-color;
+
+    cursor: pointer;
+}
+
+// navigation links' list
+.navbar {
+    $height: calc(100vh - 50px);
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: $height;
+    margin: 10px 0 0;
+    padding: 0;
+
+    li {
+        list-style-type: none;
+        height: calc(#{$height} / 5);
+
+        font-weight: 700;
+        text-align: center;
+
+        &:hover {
+            background-color: $nav-hover;
+        }
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+        height: 100%;
+    }
+}
+
+// list that contains links to alphabets tabels and test
+.alphabets-list {
+    display: none;
+}
+
+.content {
+    padding-top: 55px;
+}
+
+
+@media (max-width: 649px) {
+    nav {
+        transform: translateX(100%);
+        transition: all .5s ease-out;
+
+        &.visible {
+            transform: translateX(0);
+        }
+    }
+}
+
+@media (min-width: 650px) {
+    nav::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+
+    .logo {
+        float: left;
+        margin: 15px 0 0 2vw;
+    }
+
+    svg {
+        display: none;
+    }
+
+    .navbar {
+        float: right;
+        flex-direction: row;
+
+        margin: 0;
+        width: 80%;
+        max-width: 702px;
+        height: 60px;
+
+        li {
+            height: 100%;
+        }
+        
+        a {
+            padding: 0 20px;
+        }
+    }
+
+    .alphabets {
+        position: relative;
+
+        display: flex;
+        flex-direction: column;
+
+        &:hover {
+            .alphabets-list {
+                display: block;
+            }
+        }
+    }
+
+    .alphabets-list {
+        position: absolute;
+        top: 60px;
+        padding: 0;
+        width: 100%;
+        background-color: $nav-hover;
+
+        li {
+            height: 60px;
+
+            &:hover {
+                background-color: #ffaaab;
+            }
+        }
+    }
+}
