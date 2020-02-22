@@ -4,6 +4,7 @@
 
 @import './common-vars.scss';
 @import './alphabetsMain.scss';
+@import './quiz.scss';
 
 * {
     color: $text-color;
@@ -18,11 +19,32 @@ a {
     text-decoration: none;
 }
 
+input {
+    &[type=checkbox] {
+        opacity: 0;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+label.checked {
+    opacity: 1;
+    background-color: $nav-hover;
+    border: none;
+}
+
+button {
+    @include btn();
+}
+
 .navigation-panel {
     position: fixed;
+    z-index: 1;
     top: 0;
     width: 100%;
-    height: 50px;
+    height: 55px;
     background-color: $bcg;
 }
 
@@ -72,6 +94,8 @@ svg {
     margin: 10px 0 0;
     padding: 0;
 
+    background-color: $bcg;
+
     li {
         list-style-type: none;
         height: calc(#{$height} / 5);
@@ -99,6 +123,7 @@ svg {
 
 .content {
     padding-top: $content-top-padding;
+    min-height: 100vh;
 }
 
 

@@ -1,7 +1,5 @@
 @import './common-vars.scss';
 
-$content-height: calc(100vh - #{$content-top-padding});
-
 .alphabets-main {
     display: flex;
     flex-direction: column;
@@ -15,6 +13,8 @@ $content-height: calc(100vh - #{$content-top-padding});
     list-style-type: none;
 
     li {
+        @include btn();
+
         width: 90%;
         height: 35vh;
         border-radius: 20px;
@@ -22,11 +22,7 @@ $content-height: calc(100vh - #{$content-top-padding});
         font-weight: 700;
         letter-spacing: 1px;
 
-        border: 1px solid $text-color;
-
         &:hover {
-            background-color: $pink-hover;
-            border: none;
             font-size: 30px;
         }
     }

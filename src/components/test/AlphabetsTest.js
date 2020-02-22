@@ -126,7 +126,7 @@ const AlphabetsTest = (props) => {
     const currSet = characters[currentQuestion];
     
     return (
-        <div>
+        <>
             <Route path={`${match.path}`} exact>
                 <ChoicePanel
                     switchToTest={prepareCharactersSet}
@@ -157,7 +157,7 @@ const AlphabetsTest = (props) => {
             <Route path={`${match.path}/result`}>
                 <ResultBoard score={score} max={characters.length}/>
             </Route>
-        </div>
+        </>
     );
 };
 

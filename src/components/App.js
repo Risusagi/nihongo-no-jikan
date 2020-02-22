@@ -14,7 +14,7 @@ import Page404 from './Page404';
 const App = () => {
     return (
         <Router>
-            <div>
+            <>
                 <Nav />
                 <div className="content">
                     <Switch>
@@ -28,7 +28,7 @@ const App = () => {
                         <Route component={Page404} />
                     </Switch>
                 </div>
-            </div>
+            </>
         </Router>
     );
 };

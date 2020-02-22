@@ -27,7 +27,6 @@ export default class Card extends React.Component {
 
         //show right answer or switch to next question depend on users answer (if it is identical to current cards' symbol)
         this.props.handleAnswer(this.state.character === this.state.answer, this.props.index);
-
         
         // show right answer if given by user wasn't correct
         this.setState(
@@ -39,40 +38,43 @@ export default class Card extends React.Component {
 
     render() {
         return (
-            <div>
-                {/* user's progress */}
-                <span>
-                    {this.props.index}/{this.props.questionsAmount}
-                </span>
+            <div className="card-container">
+                <div
+                    className="quiz-card"
+                    style={{animationName: this.state.showAnswer ? 'shake' : ''}}
+                >
+                    {/* user's progress */}
+                    <span className="progress-count">
+                        {this.props.index}/{this.props.questionsAmount}
+                    </span>
 
-                {/* character in hiragana or katakana */}
-                <div>
-                    { this.props.mode === 'hiragana' ? toHiragana(this.state.character) : toKatakana(this.state.character) }
-                </div>
-
-                {/* show correct answer to question if user made mistake */}
-                {
-                    this.props.showAnswer
-                    &&
-                    <div>
+                    {/* character in hiragana or katakana */}
+                    <div className="quiz-character">
+                        { this.props.mode === 'hiragana' ? toHiragana(this.state.character) : toKatakana(this.state.character) }
+                    </div>
+                    
+                    <div
+                        className="right-answer"
+                        style={{opacity: this.props.showAnswer ? 1 : 0}}
+                    >
                         {this.state.character}
                     </div>
-                }
 
-                <form
-                    onSubmit={this.handleSubmit}
-                >
-                    <input
-                        type="text"
-                        placeholder="Romaji"
-                        value={this.state.answer}
-                        onChange={this.handleChange}
-                        autoFocus
-                    />
+                    <form
+                        onSubmit={this.handleSubmit}
+                    >
+                        <input
+                            type="text"
+                            placeholder="Romaji"
+                            value={this.state.answer}
+                            onChange={this.handleChange}
+                            autoFocus
+                        />
 
-                    <button type="submit">Next</button>
-                </form>
+                        <button type="submit">Next</button>
+                    </form>
+                </div>
             </div>
-        )
+        );
     }
 }

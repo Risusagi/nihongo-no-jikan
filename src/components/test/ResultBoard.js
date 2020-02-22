@@ -12,12 +12,15 @@ const ResultBoard = (props) => {
     }
     
     return (
-        <div>
-            {points}
-            
-            <Link to="/alphabets/test">
-                <button>Restart</button>
-            </Link>
+        <div className="result-container">
+            <div className="result-board">
+                <div>{points}%</div>
+                <div>({props.score}/{props.max})</div>
+                
+                <Link to="/alphabets/test">
+                    <button className="restart-btn-quiz">Restart</button>
+                </Link>
+            </div>
         </div>
     );
 };

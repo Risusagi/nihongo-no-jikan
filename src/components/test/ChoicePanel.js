@@ -24,6 +24,9 @@ class ChoicePanel extends React.Component {
 
     // handle change of checkboxes status and mode for future test changes
     handleChange = (e) => {
+        // visualisation of which alphabet(s) was selected
+        e.currentTarget.parentElement.classList.toggle('checked');
+
         const selectedMode = e.currentTarget.value;
         let modes = this.state.modes;
 
@@ -75,37 +78,38 @@ class ChoicePanel extends React.Component {
     
     render() {
         return (
-            <div>
+            <div className="quiz-start-panel">
                 <form
                     onSubmit={this.handleSubmit}
                 >
-                    <label>
-                        Hiragana
-                        <input
-                            type="checkbox"
-                            value="hiragana"
-                            checked={this.state.modes.includes('hiragana')}
-                            onChange={this.handleChange}
-                            key="hiragana_checkbox"
-                        />
-                    </label>
+                    <div className="quiz-options">
+                        <label>
+                            Hiragana
+                            <input
+                                type="checkbox"
+                                value="hiragana"
+                                checked={this.state.modes.includes('hiragana')}
+                                onChange={this.handleChange}
+                                key="hiragana_checkbox"
+                            />
+                        </label>
 
-                    <label>
-                        Katakana
-                        <input
-                            type="checkbox"
-                            value="katakana"
-                            checked={this.state.modes.includes('katakana')}
-                            onChange={this.handleChange}
-                            key="katakana_checkbox"
-                        />
-                    </label>
+                        <label>
+                            Katakana
+                            <input
+                                type="checkbox"
+                                value="katakana"
+                                checked={this.state.modes.includes('katakana')}
+                                onChange={this.handleChange}
+                                key="katakana_checkbox"
+                            />
+                        </label>
+                    </div>
 
                     {/* message about which alphabet was selected */}
-                    {this.state.message}
+                    <span className="msg-quiz-start">{this.state.message}</span>
                     
-                    <button type="submit">Start</button>
-
+                    <button type="submit" className="quiz-start-btn">Start</button>
                 </form>
             </div>
         );
