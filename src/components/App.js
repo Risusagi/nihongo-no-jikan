@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Nav from './Nav';
 import HomePage from './HomePage';
+import AlphabetsMain from './AlphabetsMain';
 import Alphabets from './alphabets/Alphabets';
 import AlphabetsTest from './test/AlphabetsTest';
 import KanjiSearch from './kanjiSearch/KanjiSearch';
@@ -18,6 +19,7 @@ const App = () => {
                 <div className="content">
                     <Switch>
                         <Route path="/" exact component={HomePage} />
+                        <Route path="/alphabets" exact component={AlphabetsMain} />
                         <Route path="/alphabets/tabels" component={Alphabets} />
                         <Route path="/alphabets/test" component={AlphabetsTest} />
                         <Route path="/kanjiSearch" component={KanjiSearch} />
