@@ -4,10 +4,12 @@ const CharacterCard = (props) => {
     return (
         <li>
             <div>
-                {props.character}    
-            </div>
-            <div>
-                {props.transcription}    
+                <div className="char">
+                    {props.character}    
+                </div>
+                <div>
+                    {props.transcription}    
+                </div>
             </div>
         </li>
     )

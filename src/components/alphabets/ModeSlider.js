@@ -16,14 +16,25 @@ export default class ModeSlider extends React.Component {
             () => {this.props.changeMode(this.props.propertyToChange, this.state.mode)}
         )
     }
+
+    // change transcription mode by slider click
+    handleSlider = (e) => {
+        const mode = e.clientX - e.currentTarget.offsetLeft < 25 ? 'romaji' : 'hiragana';
+        this.handleChange(mode);
+    }
     
     render() {
+        const position = this.state.mode === 'romaji' ? 'left' : 'right';
+
         return (
-            <div>
+            <div className="transcription-mode-slider">
                 <ChoiceOption name="romaji" mode={this.state.mode} handleChange={this.handleChange}/>
 
-                <div>
-                    <div></div>
+                <div 
+                    className='slider'
+                    onClick={this.handleSlider}
+                >
+                    <div className={`${position}`}></div>
                 </div>
 
                 <ChoiceOption name="hiragana" mode={this.state.mode} handleChange={this.handleChange}/>

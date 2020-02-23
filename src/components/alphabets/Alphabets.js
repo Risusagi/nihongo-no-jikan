@@ -8,7 +8,7 @@ class Alphabets extends React.Component {
         super(props);
 
         this.state = {
-            alphabet: 'hiragana',
+            alphabet: 'katakana',
             transcriptionMode: 'romaji'
         };
         
@@ -59,33 +59,37 @@ class Alphabets extends React.Component {
         const {alphabet, transcriptionMode} = this.state;
 
         return (
-            <div>
-                <label>
-                    Hiragana
-                    <input
-                        type="radio"
-                        checked={alphabet === 'hiragana'}
-                        value='hiragana'
-                        onChange={(e) => this.handleRadioChange('alphabet', e.currentTarget.value)}
-                    />  
-                </label>
+            <div className="alphabet-container">
+                <div className="alphabet-options">
+                    <label className={alphabet === 'hiragana' ? 'checked' : null}>
+                        Hiragana
+                        <input
+                            type="radio"
+                            checked={alphabet === 'hiragana'}
+                            value='hiragana'
+                            onChange={(e) => this.handleRadioChange('alphabet', e.currentTarget.value)}
+                        />  
+                    </label>
 
-                <label>
-                    Katakana
-                    <input
-                        type="radio"
-                        checked={alphabet === 'katakana'}
-                        value='katakana'
-                        onChange={(e) => this.handleRadioChange('alphabet', e.currentTarget.value)}
-                    />  
-                </label>
+                    <label className={alphabet === 'katakana' ? 'checked' : null}>
+                        Katakana
+                        <input
+                            type="radio"
+                            checked={alphabet === 'katakana'}
+                            value='katakana'
+                            onChange={(e) => this.handleRadioChange('alphabet', e.currentTarget.value)}
+                        />  
+                    </label>
+                </div>
                 
                 {/* render switch slider to select mode of transcription creation */}
                 {alphabet === 'katakana' && <ModeSlider changeMode={this.handleRadioChange} propertyToChange='transcriptionMode' mode={transcriptionMode} />}
 
-                <ul className='alphabet-table'>
-                    {this.createCards()}
-                </ul>
+                <div  className={`table-container ${alphabet}`}>
+                    <ul className='alphabet-table'>
+                        {this.createCards()}
+                    </ul>
+                </div>
             </div>
         );
     }
