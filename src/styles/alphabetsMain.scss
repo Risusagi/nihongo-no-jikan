@@ -1,5 +1,3 @@
-@import './common-vars.scss';
-
 .alphabets-main {
     display: flex;
     flex-direction: column;
@@ -9,8 +7,6 @@
     height: $content-height;
     margin: 0;
     padding: 0;
-
-    list-style-type: none;
 
     li {
         @include btn();
