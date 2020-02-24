@@ -101,36 +101,59 @@ class RomajiConverter extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="romaji-converter-container">
                 <form
                     onSubmit={this.handleFormSubmit}
                 >
-                    <ModeRadio name="hiragana" mode={this.state.mode} handleModeChange={this.handleModeChange} />
-                    <ModeRadio name="katakana" mode={this.state.mode} handleModeChange={this.handleModeChange} />
-                    <ModeRadio name="both" mode={this.state.mode} handleModeChange={this.handleModeChange} />
+                    <div className="romaji-options">
+                        <ModeRadio name="hiragana" mode={this.state.mode} handleModeChange={this.handleModeChange} />
 
+                        <ModeRadio name="katakana" mode={this.state.mode} handleModeChange={this.handleModeChange} />
+                        
+                        <ModeRadio name="both" mode={this.state.mode} handleModeChange={this.handleModeChange} />
+                    </div>
+
+                    <div className="romaji-input-area">
                     <textarea
                         onChange={this.handleTextChange}
+                        placeholder="Romaji text..."
+                        className="custom-scrollbar"
                     >
                     </textarea>
 
                     <button type="submit">Convert</button>
+                    </div>
                 </form>
 
-                {/* container for text in hiragana */}
-                <div
-                    style={this.hadleConvertionDisplay('hiragana')}
-                >
-                    {this.state.hiragana}
-                </div>
+                <div className="romaji-outputs">
+                    {/* container for text in hiragana */}
+                    <div
+                        style={this.hadleConvertionDisplay('hiragana')}
+                    >
+                        <div>
+                            {
+                                this.state.hiragana
+                                ||
+                                <span className="placeholder">
+                                    Hiragana
+                                </span>
+                            }
+                        </div>
+                    </div>
 
-                {/* container for text in katakana */}
-                <div
-                    style={this.hadleConvertionDisplay('katakana')}
-                >
-                    {this.state.katakana}
+                    {/* container for text in katakana */}
+                    <div
+                        style={this.hadleConvertionDisplay('katakana')}
+                    >
+                        {
+                            this.state.katakana
+                            ||
+                            <span className="placeholder">
+                                Katakana
+                            </span>
+                        }
+                    </div>
                 </div>
-
             </div>
         );
     }

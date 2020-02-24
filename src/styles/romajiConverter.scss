@@ -1,0 +1,148 @@
+$outputs-margin: 3vh;
+$input-height: 30vh;
+
+@mixin textContainer() {
+    width: 95%;
+    min-height: 160px;
+
+    margin: 0 auto;
+    padding: 15px;
+
+    border: 1px solid $text-color;
+    border-radius: 9px;
+
+    box-shadow: inset 0 0 5px $text-color;
+
+    font-size: 18px;
+}
+
+@mixin containerSizes() {
+    width: 45vw;
+    max-width: 550px;
+}
+
+.romaji-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+
+    padding-bottom: 10px;
+
+    label {
+        @include btn();
+        @include fullCenter();
+
+        width: 100px;
+        height: 50px;
+        margin-bottom: 1vh;
+
+        border-radius: 6px;
+
+        &:last-child {
+            width: 180px;
+        }
+    }
+}
+
+.romaji-converter-container {
+    max-width: 900px;
+    padding-top: 15px;
+
+    textarea {
+        @include textContainer();
+        display: block;
+        resize: none;
+        
+        margin-bottom: 2vh;
+
+        background-color: transparent;
+        outline: none;
+    }
+
+    button {
+        position: relative;
+        left: 97.5%;
+        width: 80px;
+        height: 40px;
+        margin-bottom: 4vh;
+        transform: translateX(-100%);
+        border-radius: 6px;
+    } 
+}
+
+// divs with converted text
+.romaji-outputs>div {
+    @include textContainer();
+    
+    margin-bottom: $outputs-margin;
+
+    div {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.placeholder {
+    opacity: .7;
+}
+
+@media (min-height: 850px) {
+    .romaji-converter-container textarea {
+        margin-bottom: 1vh;
+    }
+
+    .romaji-options {
+        height: 8vh;
+    }
+}
+
+@media (min-width: 1000px) {
+    .romaji-converter-container {
+        max-width: 1350px;
+        padding: 0 5vw;
+
+        label {
+            width: 120px;
+            height: 60px;
+            font-size: 19px;
+
+            &:last-child {
+                width: 220px;
+            }
+        }
+
+        button {
+            width: 100px;
+            height: 50px;
+            font-size: 19px;
+        }
+    }
+
+    .romaji-options {
+        height: 15vh;
+    }
+
+    .romaji-input-area {
+        @include containerSizes();
+
+        float: left;
+
+        textarea {
+            height: 30vh;
+        }
+    }
+
+    .romaji-outputs {
+        @include containerSizes();
+        float: right;
+        
+        display: flex;
+        flex-direction: column;
+        height: $input-height + $outputs-margin;
+
+        & > div {
+            min-height: initial;
+            flex-grow: 1;
+        }
+    }
+}

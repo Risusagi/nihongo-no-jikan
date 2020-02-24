@@ -27,3 +27,27 @@ $nav-hover: #ffaaacd3;
         outline: 0;
     }
 }
+
+.custom-scrollbar {
+    $border-radius: 5px;
+
+    // /* width */
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background-color: #83777f5d;
+        border-radius: $border-radius;
+        margin: 12px 0;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #2f17289a;
+        border-radius: $border-radius;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: $text-color;
+    }
+}
