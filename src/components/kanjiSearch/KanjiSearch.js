@@ -151,38 +151,37 @@ class KanjiSearch extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="kanji-search-container">
                 <Switch>
                     <Route path={`${this.props.match.path}`} exact>
                         <form
                             onSubmit={this.handleSubmit}
                         >
-                            <input
-                                type="text"
-                                value={this.state.inquiry}
-                                onChange={this.handleChange}
-                            />
+                            <div className="search-block">
+                                <input
+                                    type="text"
+                                    value={this.state.inquiry}
+                                    onChange={this.handleChange}
+                                />
+                            
+                                <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onClick={this.handleReset} tabIndex="0">
+                                    <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575" />
+                                </svg>
 
-                            <button
-                                type="button"
-                                onClick={this.handleReset}
-                            >
-                                Reset
-                            </button>
+                                <select
+                                    value={this.state.searchMode}
+                                    onChange={this.handleChange}
+                                >
+                                    <option value="english">
+                                        English meaning
+                                    </option>
 
-                            <select
-                                value={this.state.searchMode}
-                                onChange={this.handleChange}
-                            >
-                                <option value="english">
-                                    English meaning
-                                </option>
-
-                                <option value="kanji">
-                                    Kanji character
-                                </option>
-                            </select>
-
+                                    <option value="kanji">
+                                        Kanji character
+                                    </option>
+                                </select>
+                            </div>
+                            
                             <button type="submit">Search</button>
                         </form>
 
@@ -193,7 +192,7 @@ class KanjiSearch extends React.Component {
                                 ) : this.state.noResults ? (
                                     'Nothing found'
                                 ) : (
-                                    <ul>
+                                    <ul className="kanji-search-results">
                                         {this.state.results}
                                     </ul>
                                 )

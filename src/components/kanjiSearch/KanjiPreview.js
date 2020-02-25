@@ -1,25 +1,19 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { toRomaji } from 'wanakana';
-import ListItem from './ListItem';
 
 const KanjiPreview = (props) => {
     const { kanji, radical, strokes, meanings, onyomi, kunyomi } = props;
 
     // separate strings (word/reading separated with coma and space or japanese coma) got from API into individual list items
-    const prepareItems = (items, convertionRequired = false) => {
-        return items
-        .replace(/([,、])\s/g, '$1')
-        .replace(/n\/a/g, '') //for cases when pronunciation isn't available
-        .split(/[,、]/).map((item, i) => {
-            if (!item) return;
+    const prepareItems = (items) => {
+        return items.split(/,/).map((item, i, arr) => {
             return (
-                <ListItem
-                    text={item}
-                    key={convertionRequired ? `${toRomaji(item)}${i}` : `${item}${i}`}
-                />
+                <li
+                    key={`${item}${i}`}
+                >
+                    {`${item}${i !== arr.length - 1 ? ',' : ''}`}
+                </li>
             );
-
         });
     }
 
@@ -27,9 +21,11 @@ const KanjiPreview = (props) => {
         props.history.push(`${props.match.path}/view/${kanji}`);
     }
 
+    const meaningForm = meanings.indexOf(',') === -1 ? 'meaning' : 'meanings';
+
     return (
-        <li>
-            <div>
+        <li className="kanji-preview">
+            <div className="kanji-char">
                 <div>
                     {kanji}
                 </div>
@@ -41,22 +37,19 @@ const KanjiPreview = (props) => {
                 </div>    
             </div>
 
-            <div>
-                <ul>
-                    {prepareItems(meanings)}
-                </ul>
+            
+
+            <div className="details">
+                <span className="category">on</span> {onyomi}
             </div>
 
-            <div>
-                <ul>
-                    {prepareItems(onyomi, true)}
-                </ul>
+            <div className="details">
+                <span className="category">kun</span> {kunyomi}
             </div>
 
-            <div>
-                <ul>
-                    {prepareItems(kunyomi,true)}
-                </ul>
+            <div className="details">
+                <span className="category">{meaningForm}</span>
+                <ul>{prepareItems(meanings)}</ul>
             </div>
 
             <button
