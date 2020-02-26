@@ -16,7 +16,7 @@ const ExamplesTable = (props) => {
     });
     
     return (
-        <table>
+        <table className="examples-table">
             <tbody>
                 {rows}    
             </tbody>
