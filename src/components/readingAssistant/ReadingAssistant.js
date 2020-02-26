@@ -61,7 +61,8 @@ class ReadingAssistant extends React.Component {
 
             // create ruby element for every katakana string
             for (let str of strings) {
-                const regExp = new RegExp('(?<!\<ruby\>)' + str)
+                const regExp = new RegExp('(?<!\<ruby\>)' + str + '(?!\<rp\>)');
+                
                 resultCode = resultCode.replace(regExp, `<ruby>${str}<rp>(</rp><rt>${wanakana.toHiragana(str)}</rt><rp>)</rp></ruby>`);
             }
         }
@@ -80,14 +81,14 @@ class ReadingAssistant extends React.Component {
     }
     render = () => {
         return (
-            <div>
+            <div className="reading-assistant">
                 <FuriganaForm
                     handleTextConvertion={this.handleConvertion}
                 />
 
                 {/* output div */}
                 <div
-                    className="converted-text"
+                    className="converted-text custom-scrollbar"
                     dangerouslySetInnerHTML={this.state.convertedText}
                 >
                 </div>
