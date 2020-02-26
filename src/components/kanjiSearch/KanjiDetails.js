@@ -149,9 +149,9 @@ class KanjiDetails extends Component {
             );
         } else {
             return (
-                <>
-                    spiner
-                </>
+                <div className="spiner-container">
+                    <div className="spiner"></div>
+                </div>
             );
         }
     }

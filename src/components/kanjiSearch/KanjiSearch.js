@@ -186,18 +186,22 @@ class KanjiSearch extends React.Component {
                         </form>
 
                         {/* // if nothing was found display message about lack of answers for user's request */}
-                        <div>
+                        <>
                             {this.state.showSpiner ? (
-                                    'spiner'
+                                    <div className="spiner-container">
+                                        <div className="spiner"></div>
+                                    </div>
                                 ) : this.state.noResults ? (
-                                    'Nothing found'
+                                    <div className="no-results">
+                                        <span>Nothing found</span>
+                                    </div>
                                 ) : (
                                     <ul className="kanji-search-results">
                                         {this.state.results}
                                     </ul>
                                 )
                             }
-                        </div>    
+                        </>    
                     </Route>
 
                     <Route path={`${this.props.match.path}/view/:kanji`}>
