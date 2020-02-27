@@ -13,8 +13,8 @@ export default class ModeSlider extends React.Component {
             {
                 mode: mode
             },
-            () => {this.props.changeMode(this.props.propertyToChange, this.state.mode)}
-        )
+            () => this.props.changeMode(this.props.propertyToChange, this.state.mode)
+        );
     }
 
     // change transcription mode by slider click
@@ -31,10 +31,10 @@ export default class ModeSlider extends React.Component {
                 <ChoiceOption name="romaji" mode={this.state.mode} handleChange={this.handleChange}/>
 
                 <div 
-                    className='slider'
+                    className={`slider ${position}`}
                     onClick={this.handleSlider}
                 >
-                    <div className={`${position}`}></div>
+                    <div></div>
                 </div>
 
                 <ChoiceOption name="hiragana" mode={this.state.mode} handleChange={this.handleChange}/>

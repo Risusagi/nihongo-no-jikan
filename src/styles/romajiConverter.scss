@@ -1,23 +1,8 @@
 $outputs-margin: 3vh;
 $input-height: 30vh;
 
-@mixin textContainer() {
-    width: 95%;
-    min-height: 160px;
-
-    margin: 0 auto;
-    padding: 15px;
-
-    border: 1px solid $text-color;
-    border-radius: 9px;
-
-    box-shadow: inset 0 0 5px $text-color;
-
-    font-size: 18px;
-}
-
 @mixin containerSizes() {
-    width: 45vw;
+    width: 44vw;
     max-width: 550px;
 }
 

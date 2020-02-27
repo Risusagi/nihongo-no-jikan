@@ -55,44 +55,6 @@ $slider-height: 40px;
     height: $slider-height;
 }
 
-.slider {
-    $height: 22px;
-    $add: .18;
-
-    position: relative;
-
-    width: 50px;
-    height: $height;
-    margin: 0 7px;
-    background-color: rgba(209, 159, 159, 0.61);
-    border-radius: 20px;
-
-    & div {
-        $size: $height * (1 + $add);
-        position: absolute;
-        top: -1 * $height * $add / 2;
-        
-
-        width: $size;
-        height: $size;
-
-        border-radius: 50%;
-
-        background-color: $pink-hover;
-        box-shadow: 0 0 4px $text-color;
-
-        transition: .5s;
-
-        &.left {
-            left: 0;
-        }
-
-        &.right {
-            left: calc(100% - #{$size});
-        }
-    }
-}
-
 //TABLE
 .table-container {
     @include fullCenter();
