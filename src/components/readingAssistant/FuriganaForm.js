@@ -33,36 +33,50 @@ class FuriganaForm extends React.Component {
     }
 
     render = () => {
+        const position = this.state.katakanaTranscription ? 'right' : 'left';
+        
         return (
             <form
                 onSubmit={this.handleTextConvertion}
+                className="furigana-form"
             >
-                <label>
-                    Katakana transcription
-                    <input
-                        type="checkbox"
-                        checked={this.state.katakanaTranscription}
-                        onChange={this.handleChange}
-                    />
-                </label>
+                <div className="label-container">
+                    <label>
+                        Katakana transcription
+
+                        <div className={`slider ${position}`}>
+                            <div />
+                        </div>
+
+                        <input
+                            type="checkbox"
+                            checked={this.state.katakanaTranscription}
+                            onChange={this.handleChange}
+                        />
+                    </label>
+                </div>
 
                 <textarea
                     onChange={this.handleChange}
                     value={this.state.text}
+                    className="custom-scrollbar"
+                    placeholder="Text"
                 />
 
-                <button
-                    type="button"
-                    onClick={this.handleTextReading}
-                >
-                    Read text
-                </button>
+                <div className="furigana-form-btns">
+                    <button
+                        type="button"
+                        onClick={this.handleTextReading}
+                    >
+                        Read text
+                    </button>
 
-                <button
-                    type="submit"
-                >
-                    Add furigana
-                </button>
+                    <button
+                        type="submit"
+                    >
+                        Add furigana
+                    </button>
+                </div>
             </form>
         )
     }

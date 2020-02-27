@@ -1,0 +1,138 @@
+@mixin textContentBigger() {
+    width: 49%;
+    height: 50vh;
+    min-height: 300px;
+    max-height: 500px;
+}
+
+div.reading-assistant {
+    align-self: flex-start;
+
+    position: relative;
+    width: 90vw;
+    max-width: 1300px;
+}
+
+.furigana-form {
+    .label-container {
+        @include fullCenter();
+        height: 50px;
+    }
+
+    label {
+        @include fullCenter();
+    }
+
+    .slider.left {
+        background-color: rgba(235, 235, 235, 0.89);
+
+        div {
+            background-color: rgb(182, 182, 182);
+        }
+    }
+
+    textarea {
+        @include textContainer();
+
+        resize: none;
+        display: block;
+
+        width: 100%;
+        height: 35vh;
+        margin-bottom: 20px;
+        
+        background-color: transparent;
+        outline: none;
+
+        line-height: 1.7;
+        letter-spacing: 1px;
+    }
+}
+
+.furigana-form-btns {
+    display: flex;
+    justify-content: flex-end;
+
+    width: 100%;
+    margin-bottom: 30px;
+
+    button {
+        height: 40px;
+        border-radius: 6px;
+
+        &:first-child {
+            width: 96px;
+            margin-right: 15px;
+        }
+
+        &:last-child {
+            width: 120px;
+        }
+    }
+}
+
+.converted-text {
+    @include textContainer();
+
+    width: 100%;
+    margin-bottom: 40px;
+
+    line-height: 3;
+    letter-spacing: 1px;
+
+    p {
+        &:first-child {
+            margin-top: 0;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    rt {
+        font-size: 11px;
+    }
+}
+
+@media (min-width: 1000px) {
+    .reading-assistant {
+        max-width: 1300px;
+    }
+
+    .furigana-form {
+        .label-container {
+            margin-bottom: 40px;
+        }
+
+        textarea {
+            @include textContentBigger();
+            float: left;
+        }
+    }
+
+    .converted-text {
+        @include textContentBigger();
+
+        position: absolute;
+        top: 50px + 40px;
+        right: 0;
+        overflow-y: auto;
+    }
+
+    .furigana-form-btns {
+        padding-right: 51%;
+        
+        button {
+            height: 50px;
+            
+            &:first-child {
+                width: 104px;
+            }
+
+            &:last-child {
+                width: 128px;
+            }
+        }
+    }
+}
