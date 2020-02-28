@@ -1,0 +1,15 @@
+.error-page {
+    text-align: center;
+
+    // 404
+    p:first-child {
+        font-size: 80px;
+        font-weight: 700;
+        margin-top: 0;
+    }
+
+    // Page not found
+    p:nth-child(2) {
+        font-size: 40px;
+    }
+}
