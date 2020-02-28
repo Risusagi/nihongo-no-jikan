@@ -17,7 +17,8 @@ const AlphabetsTest = (props) => {
     useEffect(() => {
         setScore(Number(sessionStorage.getItem('score')));
         setProgress(Number(sessionStorage.getItem('current')));
-        setCharactersList(JSON.parse(sessionStorage.getItem('characters')));
+        // alternative for cases when choicePanel was not rendered previously
+        setCharactersList(JSON.parse(sessionStorage.getItem('characters')) || [{char: '', mode: ''}]);
     }, []);
 
     // change score and current question's count only if its value was really changed (became different from zero) to not call every time when value is changed from 0 to 0
@@ -139,7 +140,7 @@ const AlphabetsTest = (props) => {
                     characters[0].char ? (
                     /* card with current question */
                         <Card
-                            transcription={currSet.char}
+                            character={currSet.char}
                             mode={currSet.mode}
                             handleAnswer={handleAnswer}
                             questionsAmount={characters.length}

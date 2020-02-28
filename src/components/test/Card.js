@@ -2,16 +2,11 @@ import React from 'react';
 import { toHiragana, toKatakana } from 'wanakana';
 
 export default class Card extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            character: this.props.transcription,
-            // user's answer
-            answer: '',
-            showAnswer: this.props.showAnswer
-        }
+    state = {
+        // user's answer
+        answer: '',
     }
+
     handleChange = (e) => {
         const value = e.currentTarget.value;
 
@@ -26,38 +21,33 @@ export default class Card extends React.Component {
         e.preventDefault();
 
         //show right answer or switch to next question depend on users answer (if it is identical to current cards' symbol)
-        this.props.handleAnswer(this.state.character === this.state.answer, this.props.index);
-        
-        // show right answer if given by user wasn't correct
-        this.setState(
-            {
-                showAnswer: !this.props.showAnswer
-            }
-        );
+        this.props.handleAnswer(this.props.character === this.state.answer, this.props.index);
     }
 
     render() {
+        const { character, mode, questionsAmount, index, showAnswer } = this.props;
+        
         return (
             <div className="card-container">
                 <div
                     className="quiz-card"
-                    style={{animationName: this.state.showAnswer ? 'shake' : ''}}
+                    style={{animationName: showAnswer ? 'shake' : ''}}
                 >
                     {/* user's progress */}
                     <span className="progress-count">
-                        {this.props.index}/{this.props.questionsAmount}
+                        {index}/{questionsAmount}
                     </span>
 
                     {/* character in hiragana or katakana */}
                     <div className="quiz-character">
-                        { this.props.mode === 'hiragana' ? toHiragana(this.state.character) : toKatakana(this.state.character) }
+                        { mode === 'hiragana' ? toHiragana(character) : toKatakana(character) }
                     </div>
                     
                     <div
                         className="right-answer"
-                        style={{opacity: this.props.showAnswer ? 1 : 0}}
+                        style={{opacity: showAnswer ? 1 : 0}}
                     >
-                        {this.state.character}
+                        {character}
                     </div>
 
                     <form
