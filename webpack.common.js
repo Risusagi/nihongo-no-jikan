@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const dotenv = require('dotenv');
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const envKeys = () => {
     const env = dotenv.config().parsed;
@@ -41,9 +40,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            template: './public/index.html',
-        }),
         new webpack.DefinePlugin(envKeys())
     ]
 }
