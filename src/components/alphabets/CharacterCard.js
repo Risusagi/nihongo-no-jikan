@@ -1,13 +1,14 @@
 import React from 'react';
+import { isHiragana } from 'wanakana';
 
 const CharacterCard = (props) => {
     return (
         <li>
             <div>
-                <div className="char">
+                <div className="char" lang="ja-jp">
                     {props.character}    
                 </div>
-                <div>
+                <div lang={isHiragana(props.transcription) ? 'lang="ja-jp"' : null}>
                     {props.transcription}    
                 </div>
             </div>

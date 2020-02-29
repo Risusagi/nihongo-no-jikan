@@ -129,6 +129,7 @@ class RomajiConverter extends React.Component {
                     {/* container for text in hiragana */}
                     <div
                         style={this.hadleConvertionDisplay('hiragana')}
+                        lang="ja-jp"
                     >
                         <div>
                             {
@@ -144,6 +145,7 @@ class RomajiConverter extends React.Component {
                     {/* container for text in katakana */}
                     <div
                         style={this.hadleConvertionDisplay('katakana')}
+                        lang="ja-jp"
                     >
                         {
                             this.state.katakana

@@ -8,8 +8,8 @@ const ExamplesTable = (props) => {
         
         return (
             <tr key={index}>
-                <td>{example}</td>
-                <td>{transcriptionInHiragana}</td>
+                <td lang="ja-jp">{example}</td>
+                <td lang="ja-jp">{transcriptionInHiragana}</td>
                 <td>{ex.meaning.english}</td>
             </tr>
         );

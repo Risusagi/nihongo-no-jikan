@@ -39,7 +39,7 @@ export default class Card extends React.Component {
                     </span>
 
                     {/* character in hiragana or katakana */}
-                    <div className="quiz-character">
+                    <div className="quiz-character" lang="ja-jp">
                         { mode === 'hiragana' ? toHiragana(character) : toKatakana(character) }
                     </div>
                     

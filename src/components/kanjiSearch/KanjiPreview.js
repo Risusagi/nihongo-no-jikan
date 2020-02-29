@@ -26,12 +26,14 @@ const KanjiPreview = (props) => {
     return (
         <li className="kanji-preview">
             <div className="kanji-char">
-                <div>
+                <div lang="ja-jp">
                     {kanji}
                 </div>
-                <div>
+
+                <div lang="ja-jp">
                     {radical}
                 </div>
+
                 <div>
                     {strokes}
                 </div>    
@@ -40,11 +42,11 @@ const KanjiPreview = (props) => {
             
 
             <div className="details">
-                <span className="category">on</span> {onyomi}
+                <span className="category">on</span> <span lang="ja-jp">{onyomi}</span>
             </div>
 
             <div className="details">
-                <span className="category">kun</span> {kunyomi}
+                <span className="category">kun</span> <span lang="ja-jp">{kunyomi}</span>
             </div>
 
             <div className="details">

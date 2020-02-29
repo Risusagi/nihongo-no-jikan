@@ -88,6 +88,7 @@ class ReadingAssistant extends React.Component {
 
                 {/* output div */}
                 <div
+                    lang="ja-jp"
                     className="converted-text custom-scrollbar"
                     dangerouslySetInnerHTML={this.state.convertedText}
                 >

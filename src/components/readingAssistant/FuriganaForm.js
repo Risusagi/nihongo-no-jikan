@@ -57,6 +57,7 @@ class FuriganaForm extends React.Component {
                 </div>
 
                 <textarea
+                    lang="ja-jp"
                     onChange={this.handleChange}
                     value={this.state.text}
                     className="custom-scrollbar"

@@ -78,27 +78,27 @@ class KanjiDetails extends Component {
             return (
                 <div className="kanji-details">
                     <div className="details-container">
-                        <div className="kanji">{kanji.character}</div>
+                        <div className="kanji" lang="ja-jp">{kanji.character}</div>
 
                         <table className="kanji-details-table">
                             <tbody>
                                 <tr>
                                     <th>on</th>
                                     <td>
-                                        {kanji.onyomi.katakana} 
+                                        <span lang="ja-jp">{kanji.onyomi.katakana}</span>
                                         <span className="romaji-transcription"> ({kanji.onyomi.romaji})</span>
                                     </td>    
                                 </tr>
                                 <tr>
                                     <th>kun</th>
                                     <td>
-                                    {kanji.kunyomi.hiragana}
-                                    <span className="romaji-transcription"> ({kanji.kunyomi.romaji})</span>
-                                    </td>
+                                        <span lang="ja-jp">{kanji.kunyomi.hiragana}</span>
+                                        <span className="romaji-transcription"> ({kanji.kunyomi.romaji})</span>
+                                        </td>
                                 </tr>
                                 <tr>
                                     <th>radical</th>
-                                    <td>{radical.character}</td>
+                                    <td lang="ja-jp">{radical.character}</td>
                                 </tr>
                                 <tr>
                                     <th>{meaningForm}</th>
