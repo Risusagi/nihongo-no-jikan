@@ -2,13 +2,14 @@ import React from 'react';
 import { toHiragana, toKatakana } from 'wanakana';
 import CharacterCard from './CharacterCard';
 import ModeSlider from './ModeSlider';
+import TitleComponent from '../TitleComponent';
 
 class Alphabets extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            alphabet: 'katakana',
+            alphabet: 'hiragana',
             transcriptionMode: 'romaji'
         };
         
@@ -58,39 +59,45 @@ class Alphabets extends React.Component {
     render() {
         const {alphabet, transcriptionMode} = this.state;
 
+        const title = `${alphabet.charAt(0).toUpperCase() + alphabet.slice(1)} table`;
+        
         return (
-            <div className="alphabet-container">
-                <div className="alphabet-options">
-                    <label className={alphabet === 'hiragana' ? 'checked' : null}>
-                        Hiragana
-                        <input
-                            type="radio"
-                            checked={alphabet === 'hiragana'}
-                            value='hiragana'
-                            onChange={(e) => this.handleRadioChange('alphabet', e.currentTarget.value)}
-                        />  
-                    </label>
+            <>
+                <TitleComponent title={title} />
 
-                    <label className={alphabet === 'katakana' ? 'checked' : null}>
-                        Katakana
-                        <input
-                            type="radio"
-                            checked={alphabet === 'katakana'}
-                            value='katakana'
-                            onChange={(e) => this.handleRadioChange('alphabet', e.currentTarget.value)}
-                        />  
-                    </label>
-                </div>
-                
-                {/* render switch slider to select mode of transcription creation */}
-                {alphabet === 'katakana' && <ModeSlider changeMode={this.handleRadioChange} propertyToChange='transcriptionMode' mode={transcriptionMode} />}
+                <div className="alphabet-container">
+                    <div className="alphabet-options">
+                        <label className={alphabet === 'hiragana' ? 'checked' : null}>
+                            Hiragana
+                            <input
+                                type="radio"
+                                checked={alphabet === 'hiragana'}
+                                value='hiragana'
+                                onChange={(e) => this.handleRadioChange('alphabet', e.currentTarget.value)}
+                            />  
+                        </label>
 
-                <div  className={`table-container ${alphabet}`}>
-                    <ul className='alphabet-table'>
-                        {this.createCards()}
-                    </ul>
+                        <label className={alphabet === 'katakana' ? 'checked' : null}>
+                            Katakana
+                            <input
+                                type="radio"
+                                checked={alphabet === 'katakana'}
+                                value='katakana'
+                                onChange={(e) => this.handleRadioChange('alphabet', e.currentTarget.value)}
+                            />  
+                        </label>
+                    </div>
+                    
+                    {/* render switch slider to select mode of transcription creation */}
+                    {alphabet === 'katakana' && <ModeSlider changeMode={this.handleRadioChange} propertyToChange='transcriptionMode' mode={transcriptionMode} />}
+
+                    <div  className={`table-container ${alphabet}`}>
+                        <ul className='alphabet-table'>
+                            {this.createCards()}
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            </>
         );
     }
 };

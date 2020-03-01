@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import kanjiAlive from './kanjiAlive';
 import KanjiPreview from './KanjiPreview';
 import KanjiDetails from './KanjiDetails';
+import TitleComponent from '../TitleComponent';
 
 class KanjiSearch extends React.Component {
     state = {
@@ -151,67 +152,71 @@ class KanjiSearch extends React.Component {
 
     render() {
         return (
-            <div className="kanji-search-container">
-                <Switch>
-                    <Route path={`${this.props.match.path}`} exact>
-                        <form
-                            onSubmit={this.handleSubmit}
-                        >
-                            <div className="search-block">
-                                <input
-                                    type="text"
-                                    value={this.state.inquiry}
-                                    onChange={this.handleChange}
-                                />
-                            
-                                <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onClick={this.handleReset} tabIndex="0">
-                                    <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575" />
-                                </svg>
+            <>
+                <TitleComponent title="Kanji search" />
+                
+                <div className="kanji-search-container">
+                    <Switch>
+                        <Route path={`${this.props.match.path}`} exact>
+                            <form
+                                onSubmit={this.handleSubmit}
+                            >
+                                <div className="search-block">
+                                    <input
+                                        type="text"
+                                        value={this.state.inquiry}
+                                        onChange={this.handleChange}
+                                    />
+                                
+                                    <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onClick={this.handleReset} tabIndex="0">
+                                        <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575" />
+                                    </svg>
 
-                                <select
-                                    value={this.state.searchMode}
-                                    onChange={this.handleChange}
-                                >
-                                    <option value="english">
-                                        English meaning
-                                    </option>
+                                    <select
+                                        value={this.state.searchMode}
+                                        onChange={this.handleChange}
+                                    >
+                                        <option value="english">
+                                            English meaning
+                                        </option>
 
-                                    <option value="kanji">
-                                        Kanji character
-                                    </option>
-                                </select>
-                            </div>
-                            
-                            <button type="submit">Search</button>
-                        </form>
+                                        <option value="kanji">
+                                            Kanji character
+                                        </option>
+                                    </select>
+                                </div>
+                                
+                                <button type="submit">Search</button>
+                            </form>
 
-                        {/* // if nothing was found display message about lack of answers for user's request */}
-                        <>
-                            {this.state.showSpiner ? (
-                                    <div className="spiner-container">
-                                        <div className="spiner"></div>
-                                    </div>
-                                ) : this.state.noResults ? (
-                                    <div className="no-results">
-                                        <span>Nothing found</span>
-                                    </div>
-                                ) : (
-                                    <ul className="kanji-search-results">
-                                        {this.state.results}
-                                    </ul>
-                                )
-                            }
-                        </>    
-                    </Route>
+                            {/* // if nothing was found display message about lack of answers for user's request */}
+                            <>
+                                {this.state.showSpiner ? (
+                                        <div className="spiner-container">
+                                            <div className="spiner"></div>
+                                        </div>
+                                    ) : this.state.noResults ? (
+                                        <div className="no-results">
+                                            <span>Nothing found</span>
+                                        </div>
+                                    ) : (
+                                        <ul className="kanji-search-results">
+                                            {this.state.results}
+                                        </ul>
+                                    )
+                                }
+                            </>    
+                        </Route>
 
-                    <Route path={`${this.props.match.path}/view/:kanji`}>
-                        <KanjiDetails
-                            allCharacters={this.state.data}
-                            resetKanjiSearch={this.fullReset}
-                        />
-                    </Route>
-                </Switch>
-            </div>
+                        <Route path={`${this.props.match.path}/view/:kanji`}>
+                            <KanjiDetails
+                                allCharacters={this.state.data}
+                                resetKanjiSearch={this.fullReset}
+                            />
+                        </Route>
+                    </Switch>
+                </div>
+            </>
         );
     }
 };

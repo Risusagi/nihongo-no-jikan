@@ -18,6 +18,10 @@ module.exports = merge(common, {
       {
         test: /\.s[ac]ss$/i,
         use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+      },
+      {
+        test: /\.(jpe?g|png|gif|ico)$/i,
+        loader: 'file?name=[name].[ext]'
       }
     ]
   },
@@ -31,7 +35,8 @@ module.exports = merge(common, {
           collapseWhitespace: true,
           removeComments: true,
           removeRedundantAttributes: true,
-        }
+        },
+        favicon: 'src/assets/icon.png'
       }
     )
   ],

@@ -6,6 +6,7 @@ import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 import * as wanakana from "wanakana";
 
 import FuriganaForm from './FuriganaForm';
+import TitleComponent from '../TitleComponent';
 
 class ReadingAssistant extends React.Component {
     state = {
@@ -81,20 +82,24 @@ class ReadingAssistant extends React.Component {
     }
     render = () => {
         return (
-            <div className="reading-assistant">
-                <FuriganaForm
-                    handleTextConvertion={this.handleConvertion}
-                />
-
-                {/* output div */}
-                <div
-                    lang="ja-jp"
-                    className="converted-text custom-scrollbar"
-                    dangerouslySetInnerHTML={this.state.convertedText}
-                >
-                </div>
+            <>
+                <TitleComponent title="Reading assistant" />
                 
-            </div>
+                <div className="reading-assistant">
+                    <FuriganaForm
+                        handleTextConvertion={this.handleConvertion}
+                    />
+
+                    {/* output div */}
+                    <div
+                        lang="ja-jp"
+                        className="converted-text custom-scrollbar"
+                        dangerouslySetInnerHTML={this.state.convertedText}
+                    >
+                    </div>
+                    
+                </div>
+            </>
         );
     }
 };

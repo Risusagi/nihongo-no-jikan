@@ -4,6 +4,7 @@ import Card from './Card';
 import ChoicePanel from './ChoicePanel';
 import ResultBoard from './ResultBoard';
 import Page404 from '../Page404';
+import TitleComponent from '../TitleComponent';
 
 const AlphabetsTest = (props) => {
     const [score, setScore] = useState(0);
@@ -128,6 +129,8 @@ const AlphabetsTest = (props) => {
     
     return (
         <>
+            <TitleComponent title="Kana quiz" />
+            
             <Route path={`${match.path}`} exact>
                 <ChoicePanel
                     switchToTest={prepareCharactersSet}
