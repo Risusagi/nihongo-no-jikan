@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Nav from './Nav';
 import HomePage from './HomePage';
@@ -13,7 +13,7 @@ import Page404 from './Page404';
 
 const App = () => {
     return (
-        <Router>
+        <Router basename="/">
             <>
                 <Nav />
                 <div className="content">
