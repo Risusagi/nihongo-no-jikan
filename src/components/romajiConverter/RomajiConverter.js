@@ -1,5 +1,5 @@
 import React from 'react';
-import { isRomaji, toHiragana, toKatakana } from 'wanakana';
+import { toHiragana, toKatakana } from 'wanakana';
 import ModeRadio from './ModeRadio';
 import TitleComponent from '../TitleComponent';
 
@@ -37,8 +37,6 @@ class RomajiConverter extends React.Component {
 
     // convert user's text accordingly to current mode
     handleTextConvertion = () => {
-        if (!isRomaji(this.state.romajiText)) return;
-
         if (this.state.mode === 'hiragana') {
             this.handleConvertionToHiragana();
         } else if (this.state.mode === 'katakana') {
