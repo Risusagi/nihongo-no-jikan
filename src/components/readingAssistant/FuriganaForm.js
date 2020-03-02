@@ -22,6 +22,10 @@ class FuriganaForm extends React.Component {
 
     // convert text to speech, uses Responsice voice library (applied by URL)
     handleTextReading = () => {
+        if (!process.env.REACT_APP_RESPONSIVEVOICES_KEY) {
+            alert(`Unfortunatelly this function isn't available at this moment`)
+            return;
+        }
         responsiveVoice.speak(this.state.text, "Japanese Male", {rate: .9});
     }
 
