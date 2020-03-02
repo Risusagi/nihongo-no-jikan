@@ -47,6 +47,11 @@ class KanjiSearch extends React.Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
+        // ask user for key for kanji alive API, would be deleted after a server creation
+        if (!process.env.REACT_APP_KANJIALIVE_KEY) {
+            process.env.REACT_APP_KANJIALIVE_KEY = prompt("Unfortunatelly this page is available only for users with authorization key. You can get it after registration on this page: https://rapidapi.com/KanjiAlive/api/learn-to-read-and-write-japanese-kanji. Type key from X-RapidAPI-Key line here please", "");
+        }
+
         this.setState({
             showSpiner: true
         });
@@ -55,7 +60,7 @@ class KanjiSearch extends React.Component {
             // search with english meaning return poor information about kanji (kanji + its radical)
             // returns empty array if nothing was found
             // kanji alive can't find results if search request wasn't written in lower case
-            const data = await kanjiAlive.get('/search/advanced', {
+            const data = await kanjiAlive().get('/search/advanced', {
                 params: {
                     kem: this.state.inquiry.toLowerCase()
                 }
@@ -64,7 +69,7 @@ class KanjiSearch extends React.Component {
             // request for more data about every kanji got previously
             const fullData = await Promise.all(
                 data.data.map(async set => {
-                    const kanji = await kanjiAlive.get(`/kanji/${set.kanji.character}`);
+                    const kanji = await kanjiAlive().get(`/kanji/${set.kanji.character}`);
 
                     return kanji.data;    
                 })
@@ -76,7 +81,7 @@ class KanjiSearch extends React.Component {
         } else {
             // search by kanji returns full information about one kanji
             // return object with error property that contains message that search wasn't successful
-            const data = await kanjiAlive.get(`/kanji/${this.state.inquiry}`);
+            const data = await kanjiAlive().get(`/kanji/${this.state.inquiry}`);
 
             this.renderSearchResults([data.data]);
             if(!data.data.error) sessionStorage.setItem('results', JSON.stringify([data.data]));
