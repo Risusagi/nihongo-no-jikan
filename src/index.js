@@ -26,4 +26,7 @@ ReactDOM.render(
     document.querySelector('#root')
 );
 
-module.hot.accept();
+// disable hot mode in production
+if (process.env.ENVIRONMENT === 'development') {
+    module.hot.accept();
+}
