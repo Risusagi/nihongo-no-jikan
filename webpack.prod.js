@@ -7,13 +7,19 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
 module.exports = (env) => {
   return merge(common, {
     mode: "production",
+    entry: {
+      kuromoji: './node_modules/kuromoji/build/kuromoji.js',
+      index: './src/index.js',
+    },
     output: {
       path: path.resolve(__dirname, "dist"),
-      filename: "bundle.[contentHash].js"
+      filename: "bundle.[name][contentHash].js"
     },
     module: {
       rules: [
@@ -33,6 +39,7 @@ module.exports = (env) => {
       new HtmlWebpackPlugin(
         {
           template: './public/index.html',
+          chunks: ['kuromoji', 'index'],
           minify: {
             collapseWhitespace: true,
             removeComments: true,
@@ -41,7 +48,24 @@ module.exports = (env) => {
           favicon: 'src/assets/icon.png'
         }
       ),
-      new webpack.DefinePlugin( {'process.env.ENVIRONMENT': JSON.stringify(env.ENVIRONMENT) })
+      new webpack.DefinePlugin( {'process.env.ENVIRONMENT': JSON.stringify(env.ENVIRONMENT) }),
+      // files for reading assistant furigana creation
+      new CopyPlugin([
+        { from: './node_modules/kuromoji/dict', to: './kuromoji/dict' },
+      ]),
+      // change path to kuromoji files (reading assistant) as github pages
+      new ReplaceInFileWebpackPlugin([
+        {
+          dir: 'dist',
+          test: /\.js$/i,
+          rules: [
+            {
+              search: 'node_modules/',
+              replace: ''
+            }
+          ]
+        }
+      ]),
     ],
     optimization: {
       minimizer: [new OptimizeCssAssetsPlugin(), new TerserPlugin()]
