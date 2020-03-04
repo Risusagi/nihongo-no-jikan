@@ -1,9 +1,11 @@
+$nav-height: 60px;
+
 .navigation-panel {
     position: fixed;
     z-index: 1;
     top: 0;
     width: 100%;
-    height: 55px;
+    height: $nav-height;
     background-color: $bcg;
 
     // menu icon
@@ -145,7 +147,7 @@
         background-color: $nav-hover;
 
         li {
-            height: 60px;
+            height: $nav-height;
 
             &:hover {
                 background-color: $pink-hover;
