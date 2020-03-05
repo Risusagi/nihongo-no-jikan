@@ -1,90 +1,80 @@
 import React from 'react';
 
-class FuriganaForm extends React.Component {
-    state = {
-        text: '',
-        katakanaTranscription: true
-    }
-
+const FuriganaForm = (props) => {
     // event for textarea and one checkbox
-    handleChange = (e) => {
+    const handleChange = (e) => {
         const isTextArea = e.target.type === 'textarea';
         const property = isTextArea ? 'text' : 'katakanaTranscription';
         const value = isTextArea ? e.target.value : e.target.checked;
         
-        this.setState(prevState => (
-            {
-                ...prevState,
-                [property]: value
-            }
-        ));
-    }
+        props.handleChange(property, value);
+    };
 
     // convert text to speech, uses Responsice voice library (applied by URL)
-    handleTextReading = () => {
+    const handleTextReading = () => {
         if (!process.env.REACT_APP_RESPONSIVEVOICES_KEY) {
             alert(`Unfortunatelly this function isn't available at this moment`)
             return;
         }
-        responsiveVoice.speak(this.state.text, "Japanese Male", {rate: .9});
-    }
 
-    handleTextConvertion = (e) => {
+        responsiveVoice.speak(props.text, "Japanese Male", {rate: .9});
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         // send data to parent
-        this.props.handleTextConvertion(this.state.text, this.state.katakanaTranscription);
-    }
+        props.renderConvertedText(props.text, props.katakanaTranscription);
 
-    render = () => {
-        const position = this.state.katakanaTranscription ? 'right' : 'left';
+    };
+    
+    const position = props.katakanaTranscription ? 'right' : 'left';
         
-        return (
-            <form
-                onSubmit={this.handleTextConvertion}
-                className="furigana-form"
-            >
-                <div className="label-container">
-                    <label>
-                        Katakana transcription
+    return (
+        <form
+            onSubmit={handleSubmit}
+            className="furigana-form"
+        >
+            <div className="label-container">
+                <label>
+                    Katakana transcription
 
-                        <div className={`slider ${position}`}>
-                            <div />
-                        </div>
+                    <div className={`slider ${position}`}>
+                        <div />
+                    </div>
 
-                        <input
-                            type="checkbox"
-                            checked={this.state.katakanaTranscription}
-                            onChange={this.handleChange}
-                        />
-                    </label>
-                </div>
+                    <input
+                        type="checkbox"
+                        checked={props.katakanaTranscription}
+                        onChange={handleChange}
+                    />
+                </label>
+            </div>
 
-                <textarea
-                    lang="ja-jp"
-                    onChange={this.handleChange}
-                    value={this.state.text}
-                    className="custom-scrollbar"
-                    placeholder="Text"
-                />
+            <textarea
+                lang="ja-jp"
+                onChange={handleChange}
+                value={props.text}
+                className="custom-scrollbar"
+                placeholder="Text"
+            />
 
-                <div className="furigana-form-btns">
-                    <button
-                        type="button"
-                        onClick={this.handleTextReading}
-                    >
-                        Read text
-                    </button>
+            <div className="furigana-form-btns">
+                <button
+                    type="button"
+                    onClick={handleTextReading}
+                >
+                    Read text
+                </button>
 
-                    <button
-                        type="submit"
-                    >
-                        Add furigana
-                    </button>
-                </div>
-            </form>
-        )
-    }
+                <button
+                    type="submit"
+                >
+                    Add furigana
+                </button>
+            </div>
+        </form>
+    );
 }
 
 export default FuriganaForm;

@@ -10,6 +10,8 @@ import TitleComponent from '../TitleComponent';
 
 class ReadingAssistant extends React.Component {
     state = {
+        text: '',
+        katakanaTranscription: true,
         convertedText: {
             __html: ''
         }
@@ -24,7 +26,35 @@ class ReadingAssistant extends React.Component {
     componentDidMount = () => {
         this.initializeKuroshiro();
     }
+
+    // handle onchange even of checkbox and textarea inside FuriganaForm
+    handleChange = async (property, value) => {
+        // rerender text with furigana every time user changes katakana transcription requirement, except the case when text wasn't converted previously
+        if (property === 'katakanaTranscription' && this.state.convertedText.__html) {
+            const convertedText = await this.handleConvertion(this.state.text, value);
+            
+            this.setState(prevState => (
+                {
+                    ...prevState,
+                    [property]: value,
+                    convertedText: {
+                        __html: convertedText
+                    }
+                }
+            ));
+
+            return;
+        }
+
+        this.setState(prevState => (
+            {
+                ...prevState,
+                [property]: value
+            }
+        ));
+    }
     
+    // create text with furigana
     handleConvertion = async (text, createKatakanaTranscription) => {
         // if given text isn't in japanese don't try to convert it
         if (!Kuroshiro.Util.hasJapanese(text)) {
@@ -67,19 +97,27 @@ class ReadingAssistant extends React.Component {
                 resultCode = resultCode.replace(regExp, `<ruby>${str}<rp>(</rp><rt>${wanakana.toHiragana(str)}</rt><rp>)</rp></ruby>`);
             }
         }
-        
+
+        return `<p>${resultCode}</p>`;
+    }
+
+    // render text with furigana inside special container
+    renderConvertedText = async (text, katakanaRequired) => {
+        const convertedText = await this.handleConvertion(text, katakanaRequired);
+
         // change state to show text with furigana to user (html code, not normal text)
-        this.setState(prevState => (
-            {
-                ...prevState,
-                convertedText: {__html: `<p>${resultCode}</p>`}
+        this.setState(prevState => ({
+            ...prevState,
+            convertedText: {
+                __html: convertedText
             }
-        ));
+        }));
     }
 
     handleNewLines(codeToChange) {
         return codeToChange.replace(/\n(?!<\/rt>)/g, '</p> <p>');
     }
+
     render = () => {
         return (
             <>
@@ -87,7 +125,10 @@ class ReadingAssistant extends React.Component {
                 
                 <div className="reading-assistant">
                     <FuriganaForm
-                        handleTextConvertion={this.handleConvertion}
+                        handleChange={this.handleChange}
+                        renderConvertedText={this.renderConvertedText}
+                        text={this.state.text}
+                        katakanaTranscription={this.state.katakanaTranscription}
                     />
 
                     {/* output div */}
