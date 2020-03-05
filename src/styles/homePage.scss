@@ -1,6 +1,6 @@
 .home-page-container {
     max-width: 1000px;
-    padding: 0 5vw 80px 5vw;
+    padding: 0 5vw 20px 5vw;
 
     text-align: justify;
     line-height: 1.5;
@@ -21,4 +21,17 @@
     font-weight: 700;
     font-style: italic;
     color: #344861;
+}
+
+.credits {
+    margin-top: 45px;
+    font-size: 14px;
+
+    li {
+        margin-bottom: 8px;
+    }
+    
+    a {
+        color: #1d508f;
+    }
 }

@@ -46,7 +46,29 @@ const HomePage = () => {
                 </div>
 
                 <p>Hope this page will make learning process easier for you and you will enjoy it.</p>
+
+                <div className="credits">
+                    <p>Nihongo no jikan was created with the use of:</p>
+                    <ul>
+                        <li>
+                            <a href="https://app.kanjialive.com/api/docs">Kanji Alive</a> by Harumi Hibino Lory & Arno Bosse licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0 license</a>. The original license text can be found <a href="https://kanjialive.com/credits/">here</a>.
+                        </li>
+                        <li>
+                            <a href="https://github.com/WaniKani/WanaKana">WanaKana</a> by WaniKani Community Github under MIT license. The original license text can be found <a href="https://github.com/WaniKani/WanaKana/blob/master/LICENSE">here</a>.
+                        </li>
+                        <li>
+                            <a href="https://github.com/hexenq/kuroshiro">kuroshiro</a> by Hexen Qi under MIT license. The original license text can be found <a href="https://github.com/hexenq/kuroshiro/blob/master/LICENSE">here</a>.
+                        </li>
+                        <li>
+                            <a href="https://github.com/hexenq/kuroshiro-analyzer-kuromoji">kuroshiro-analyzer-kuromoji</a> by Hexen Qi under MIT license. The original license text can be found <a href="https://github.com/hexenq/kuroshiro-analyzer-kuromoji/blob/master/LICENSE">here</a>.
+                        </li>
+                        <li>
+                            <a href="https://responsivevoice.org">ResponsiveVoice</a> under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Non-Commercial License</a>.
+                        </li>
+                    </ul>
+                </div>
             </div>
+            
         </>
     );
 };
