@@ -16,6 +16,7 @@
     align-items: center;
     justify-content: space-evenly;
     height: 50%;
+    min-height: 190px;
 
     label {
         @include fullCenter();
@@ -72,7 +73,7 @@
 .card-container {
     position: relative;
     height: $content-height;
-    min-height: 328px;
+    // min-height: 328px;
 }
 
 .quiz-card {
@@ -137,6 +138,21 @@
     font-size: 22px;
     color: rgb(255, 0, 55);
     font-weight: 700;
+}
+
+//styles mostly for cases when virtual keyboard is active
+@media (max-height: 420px) {
+    .quiz-card {
+        top: 0;
+        transform: translate(-50%, 0%);
+
+        border: none;
+
+        button {
+            height: 44px;
+            margin: 10px auto;
+        }
+    }
 }
 
 @media (min-width: 1040px) {

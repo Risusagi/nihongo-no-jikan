@@ -8,6 +8,8 @@ $nav-height: 60px;
     height: $nav-height;
     background-color: $bcg;
 
+    box-shadow: 0 0 6px $text-color;
+
     // menu icon
     svg {
         position: absolute;
