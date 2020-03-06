@@ -1,5 +1,5 @@
 // common variables for all subpages
-$content-top-padding: 75px;
+$content-top-padding: 70px;
 $content-height: calc(100vh - #{$content-top-padding});
 
 $bcg: #fff5d7;
@@ -67,14 +67,14 @@ $nav-hover: #ffaaacd3;
     }
 }
 
-.slider {
-    $height: 22px;
+@mixin slider($width, $height) {
+    // $height: 22px;
     $add: .18;
     $size: $height * (1 + $add);
 
     position: relative;
 
-    width: 50px;
+    width: $width;
     height: $height;
     margin: 0 7px;
     background-color: rgba(209, 159, 159, 0.61);
@@ -110,5 +110,15 @@ $nav-hover: #ffaaacd3;
         box-shadow: 0 0 4px $text-color;
 
         transition: .5s;
+    }
+}
+
+.slider {
+    @include slider(50px, 22px);
+}
+
+@media (max-height: 750px) {
+    .slider {
+        @include slider(40px, 16px);
     }
 }

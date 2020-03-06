@@ -5,7 +5,7 @@ $select-width: 160px;
 $sborder-radius: 8px;
 $svg-margin: 6px;
 
-.kanji-search-container{
+.kanji-search-container {
     min-height: $content-height;
     max-width: 950px;
     padding: 3vh 5vw 0 5vw;
@@ -30,7 +30,7 @@ $svg-margin: 6px;
     justify-content: stretch;
 
     width: 100%;
-    min-width: 345px;
+    min-width: 325px;
     height: $sblock-height;
     margin-bottom: 10px;
 
@@ -39,7 +39,7 @@ $svg-margin: 6px;
 
     input {
         flex-grow: 1;
-        min-width: 158px;
+        min-width: 150px;
         height: 100%;
 
         padding: 5px 10px;
@@ -179,7 +179,13 @@ $svg-margin: 6px;
     opacity: .7;
 }
 
-@media (min-width: 600px) {
+@media (max-width: 350px) {
+    .kanji-search-container {
+        padding: 3vh 1vw 0 1vw;
+    }
+}
+
+@media (min-width: 570px) {
     .search-block {
         width: calc(100% - #{$sbtn-width} - 20px);
         margin-right: 20px;

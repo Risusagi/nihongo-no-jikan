@@ -1,12 +1,16 @@
 .quiz-start-panel {
     display: flex;
     align-items: center;
+    justify-content: center;
 
     height: $content-height;
 
     form {
+        position: relative;
         width: 100%;
-        height: 90%;
+        max-width: 2000px;
+        height: 100%;
+        max-height: 580px;
     }
 }
 
@@ -22,7 +26,7 @@
         @include fullCenter();
         @include btn();
         width: 80%;
-        height: 90px;
+        height: 82px;
 
         border-radius: 10px;
 
@@ -34,7 +38,7 @@
     display: block;
     text-align: center;
 
-    margin-top: 12vh;
+    margin-top: 9vh;
 }
 
 .quiz-start-btn {
@@ -43,22 +47,34 @@
     width: 60vw;
     max-width: 450px;
     height: 60px;
-    margin: 12vh auto 0 auto;
+    margin: 9vh auto 2vh auto;
 
     border-radius: 10px;
 }
 
+@media (min-height: 500px) {
+    .quiz-options {
+        max-height: 250px;
+
+        label {
+            height: 90px;
+        }
+    }
+
+    .msg-quiz-start,
+    .quiz-start-btn {
+        margin-top: 12vh;
+    }
+}
 
 @media (min-width: 650px) {
-    .quiz-start-panel form {
-        height: 50vh;
-    }
     .quiz-options {
         flex-direction: row;
         height: 30%;
 
         label {
             width: 40vw;
+            max-width: 700px;
         }
     }
 }
@@ -73,7 +89,6 @@
 .card-container {
     position: relative;
     height: $content-height;
-    // min-height: 328px;
 }
 
 .quiz-card {
@@ -94,6 +109,7 @@
 
     input {
         display: block;
+        // don't overflow card on smaller screens
         max-width: 95%;
         margin: 5vh auto;
         border: 0;
@@ -101,6 +117,7 @@
         background-color: transparent;
         
         text-align: center;
+        line-height: 1.4em;
     }
 
     button {
@@ -127,6 +144,7 @@
 
     height: 20vh;
     min-height: 60px;
+    max-height: 170px;
     margin-top: 3vw;
     font-size: 50px;
 }
@@ -135,13 +153,14 @@
     @include fullCenter();
     height: 8vh;
     min-height: 26px;
+    max-height: 50px;
     font-size: 22px;
     color: rgb(255, 0, 55);
     font-weight: 700;
 }
 
 //styles mostly for cases when virtual keyboard is active
-@media (max-height: 420px) {
+@media (max-height: 460px) {
     .quiz-card {
         top: 0;
         transform: translate(-50%, 0%);
@@ -149,9 +168,15 @@
         border: none;
 
         button {
-            height: 44px;
+            height: 42px;
             margin: 10px auto;
         }
+    }
+}
+
+@media (min-height: 800px) {
+    .quiz-card button {
+        margin: 6vh auto;
     }
 }
 
@@ -159,6 +184,10 @@
     .progress-count {
         top: 20px;
         right: 20px;
+    }
+
+    .quiz-character {
+        margin-top: 20px;
     }
 }
 
@@ -172,9 +201,11 @@
 
 .result-board {
     width: 100%;
+
     div {
         display: block;
         text-align: center;
+
         &:first-child {
             font-size: 40px;
             margin-bottom: 20px;
@@ -193,4 +224,14 @@
     height: 60px;
 
     border-radius: 10px;
+}
+
+@media (max-height: 270px) {
+    .result-board div:nth-child(2) {
+        margin-bottom: 20px;
+    }
+    
+    .restart-btn-quiz {
+        height: 44px;
+    }
 }

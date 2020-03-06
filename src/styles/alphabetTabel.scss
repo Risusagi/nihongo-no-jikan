@@ -11,12 +11,12 @@ $slider-height: 40px;
     @return calc((#{$full-height} - #{$gap} * (#{$rows} - 1)) / #{$rows} - 2px);
 }
 
-@mixin fontSizes($one-line) {
+@mixin fontSizes($one-line, $m1: .55, $m2: .35) {
     .char {
-        font-size: calc(#{$one-line} * 0.55);
+        font-size: calc(#{$one-line} * #{$m1});
 
         & + * {
-            font-size: calc(#{$one-line} * 0.35);
+            font-size: calc(#{$one-line} * #{$m2});
         }
     }
 }
@@ -96,7 +96,69 @@ $slider-height: 40px;
     }
 }
 
+$options-height: 56px;
+$slider-height: 30px;
+$h-max-800: oneLine(calc(#{$options-height} + 10px), 11);
+$k-max-800: oneLine(calc(#{$options-height} + #{$slider-height} + 10px), 11);
 
+@media (max-height: 800px) {
+    .alphabet-options {
+        height: $options-height;
+
+        label {
+            height: 46px;
+        }
+    }
+
+    .hiragana {
+        @include fontSizes($h-max-800);
+
+        height: fullHeight($options-height);
+    }
+
+    .katakana {
+        @include fontSizes($k-max-800);
+
+        height: fullHeight($options-height + $slider-height);
+    }
+
+    .transcription-mode-slider {
+        height: $slider-height;
+    }
+}
+
+@media (max-height: 500px) and (max-width: 839px) and (min-width: 305px) {
+    .alphabet-table {
+        li div {
+            width: 86%;
+            max-width: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            div:nth-child(2) {
+                display: inline-block;
+                flex-basis: 0;
+                opacity: .5;
+
+                &::before {
+                    content: "(";
+                }
+                &::after {
+                    content: ")";
+                }
+            }
+        }
+    }
+
+    .hiragana {
+        @include fontSizes($h-max-800, .8, .5);
+    }
+
+    .katakana {
+        @include fontSizes($k-max-800, .8, .5);
+    }
+}
 
 @media (min-height: 1220px) {
     .alphabet-table {
@@ -150,6 +212,10 @@ $slider-height: 40px;
         li {
             max-width: 85px;
             line-height: 1.3;
+
+            div div:nth-child(2) {
+                opacity: .9;
+            }
         }
 
         .char {

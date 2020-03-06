@@ -95,6 +95,16 @@ div.reading-assistant {
     }
 }
 
+@media (max-height: 360px) {
+    .furigana-form .label-container {
+        height: 40px;
+    }
+
+    .furigana-form textarea {
+        margin-bottom: 7px;
+    }
+}
+
 @media (min-width: 1000px) {
     .reading-assistant {
         max-width: 1300px;
