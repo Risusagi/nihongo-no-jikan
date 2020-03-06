@@ -11,6 +11,7 @@ const AlphabetsTest = (props) => {
     const [currentQuestion, setProgress] = useState(0);
     const [characters, setCharactersList] = useState([{char: '', mode: ''}]);
     const [showAnswer, setAnswerDisplay] = useState(false);
+    const [vibrationEnabled, setVibration] = useState(true);
     const match = useRouteMatch();
 
     // on component mount, every time when page was refreshed
@@ -87,8 +88,9 @@ const AlphabetsTest = (props) => {
 
             navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
 
-            if (navigator.vibrate && checkDevice()) {
-                navigator.vibrate(200);
+            // if vibration is available for user's browser, user uses mobile device and didn't turn vibration off (with special icon) vibrate on every wrong answer
+            if (navigator.vibrate && checkDevice() && vibrationEnabled) {
+                navigator.vibrate(350);
             }
         }
     }
@@ -132,7 +134,7 @@ const AlphabetsTest = (props) => {
         }
 
         setCharactersList(chars);
-    }
+    };
 
     // clear all statistics every time user switches to test's choice panel
     const clearStatistics = () => {
@@ -141,7 +143,12 @@ const AlphabetsTest = (props) => {
         setCharactersList([{char: '', mode: ''}]);
         setAnswerDisplay(false);
         sessionStorage.setItem('points', 0);
-    }
+    };
+
+    // handle turning on/off of vibration
+    const setVibrationMode = () => {
+        setVibration(!vibrationEnabled);
+    };
 
     const currSet = characters[currentQuestion];
     
@@ -168,6 +175,9 @@ const AlphabetsTest = (props) => {
                             index={currentQuestion + 1}
                             key={`${currSet.char}-${currSet.mode}`}
                             showAnswer={showAnswer}
+                            setVibrationMode={setVibrationMode}
+                            vibrationEnabled={vibrationEnabled}
+                            vibrationAvailable={checkDevice() && navigator.vibrate}
                         />    
                     ) : (
                         <Page404 />

@@ -65,6 +65,9 @@ const HomePage = () => {
                         <li>
                             <a href="https://responsivevoice.org">ResponsiveVoice</a> under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Non-Commercial License</a>.
                         </li>
+                        <li>
+                            Icon made by <a href="https://www.flaticon.com/authors/those-icons" title="Those Icons">Those Icons</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+                        </li>
                     </ul>
                 </div>
             </div>
