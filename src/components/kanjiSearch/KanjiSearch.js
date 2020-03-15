@@ -4,6 +4,7 @@ import kanjiAlive from './kanjiAlive';
 import KanjiPreview from './KanjiPreview';
 import KanjiDetails from './KanjiDetails';
 import TitleComponent from '../TitleComponent';
+import Modal from '../Modal';
 
 class KanjiSearch extends React.Component {
     state = {
@@ -12,7 +13,10 @@ class KanjiSearch extends React.Component {
         data: [],
         results: [],
         noResults: false,
-        showSpiner: false
+        showSpiner: false,
+        APIKey: process.env.REACT_APP_KANJIALIVE_KEY,
+        usersKey: '',
+        displayModal: false
     }
 
     componentDidMount = () => {
@@ -24,10 +28,14 @@ class KanjiSearch extends React.Component {
 
         // render results of the search if they were saved before, set data for KanjiDetails render and set noResults accordingly to results appearance
         this.renderSearchResults(JSON.parse(sessionStorage.getItem('results')) || []);
+
+        window.addEventListener('keydown', this.handleKeyDown);
     }
 
     componentWillUnmount = () => {
         sessionStorage.clear();
+
+        window.removeEventListener('keydown', this.handleKeyDown);
     }
 
     // handle search input or selection changes (user's inquiry or mode of search)
@@ -48,47 +56,63 @@ class KanjiSearch extends React.Component {
         e.preventDefault();
 
         // ask user for key for kanji alive API, would be deleted after a server creation
-        if (!process.env.REACT_APP_KANJIALIVE_KEY) {
-            process.env.REACT_APP_KANJIALIVE_KEY = prompt("Unfortunatelly this page is available only for users with authorization key. You can get it after registration on this page: https://rapidapi.com/KanjiAlive/api/learn-to-read-and-write-japanese-kanji. Type key from X-RapidAPI-Key line here please", "");
-        }
-
-        this.setState({
-            showSpiner: true
-        });
-
-        if (this.state.searchMode === 'english') {
-            // search with english meaning return poor information about kanji (kanji + its radical)
-            // returns empty array if nothing was found
-            // kanji alive can't find results if search request wasn't written in lower case
-            const data = await kanjiAlive().get('/search/advanced', {
-                params: {
-                    kem: this.state.inquiry.toLowerCase()
-                }
+        if (!this.state.APIKey) {
+            this.setState({
+                displayModal: true
             });
-            
-            // request for more data about every kanji got previously
-            const fullData = await Promise.all(
-                data.data.map(async set => {
-                    const kanji = await kanjiAlive().get(`/kanji/${set.kanji.character}`);
 
-                    return kanji.data;    
-                })
-            );
-            
-            this.renderSearchResults(fullData);
-            if (fullData.length) sessionStorage.setItem('results', JSON.stringify(fullData));
-
-        } else {
-            // search by kanji returns full information about one kanji
-            // return object with error property that contains message that search wasn't successful
-            const data = await kanjiAlive().get(`/kanji/${this.state.inquiry}`);
-
-            this.renderSearchResults([data.data]);
-            if(!data.data.error) sessionStorage.setItem('results', JSON.stringify([data.data]));
+            return;
         }
 
-        // save inquiry
-        sessionStorage.setItem('inquiry', this.state.inquiry.toLowerCase());
+        try {
+            this.setState({
+                showSpiner: true
+            });
+
+            if (this.state.searchMode === 'english') {
+                // search with english meaning return poor information about kanji (kanji + its radical)
+                // returns empty array if nothing was found
+                // kanji alive can't find results if search request wasn't written in lower case
+                const data = await kanjiAlive(this.state.APIKey).get('/search/advanced', {
+                    params: {
+                        kem: this.state.inquiry.toLowerCase()
+                    }
+                });
+                
+                // request for more data about every kanji got previously
+                const fullData = await Promise.all(
+                    data.data.map(async set => {
+                        const kanji = await kanjiAlive(this.state.APIKey).get(`/kanji/${set.kanji.character}`);
+
+                        return kanji.data;    
+                    })
+                );
+                
+                this.renderSearchResults(fullData);
+                if (fullData.length) sessionStorage.setItem('results', JSON.stringify(fullData));
+
+            } else {
+                // search by kanji returns full information about one kanji
+                // return object with error property that contains message that search wasn't successful
+                const data = await kanjiAlive(this.state.APIKey).get(`/kanji/${this.state.inquiry}`);
+
+                this.renderSearchResults([data.data]);
+                if(!data.data.error) sessionStorage.setItem('results', JSON.stringify([data.data]));
+            }
+
+            // save inquiry
+            sessionStorage.setItem('inquiry', this.state.inquiry.toLowerCase());
+        } catch (err) {
+            // if user's API key isn't valid
+            if (err.request.status === 401) {
+                this.setState({
+                    usersKey: '',
+                    APIKey: '',
+                    displayModal: true,
+                    showSpiner: false
+                });
+            }
+        }
     }
 
     renderSearchResults = (results) => {
@@ -155,6 +179,39 @@ class KanjiSearch extends React.Component {
         sessionStorage.clear();
     }
 
+    // set API key to the value given by user and hide modal
+    handleAPIKey = (e) => {
+        e.preventDefault();
+
+        this.setState(prevState => ({
+            APIKey: prevState.usersKey,
+            displayModal: false
+        }));
+    }
+
+    // handle modal's input change
+    handleUsersKey = (e) => {
+        const value = e.currentTarget.value;
+
+        this.setState({
+            usersKey: value
+        });
+    }
+
+    // hide modal without saving key
+    hideModal = () => {
+        this.setState({
+            displayModal: false,
+            usersKey: '',
+            APIKey: ''
+        });
+    }
+
+    //hide modal on esc press
+    handleKeyDown = (e) => {
+        if (e.keyCode === 27) this.hideModal();
+    }
+
     render() {
         return (
             <>
@@ -211,6 +268,30 @@ class KanjiSearch extends React.Component {
                                     )
                                 }
                             </>    
+                            
+                            {
+                                this.state.displayModal &&
+                                <Modal
+                                    hideModal={this.hideModal}
+                                >
+                                    <div className="modal-body with-btn">
+                                        <p>Unfortunately, this page is available only with an authorization key. You can get it after registration on <a href="https://rapidapi.com/KanjiAlive/api/learn-to-read-and-write-japanese-kanji" target="blank">Kanji Alive page</a>. The key is placed in X-RapidAPI-Key line.</p>
+
+                                        <form
+                                            onSubmit={this.handleAPIKey}
+                                        >
+                                            <input
+                                                type="text"
+                                                placeholder="Key"
+                                                value={this.state.usersKey}
+                                                onChange={this.handleUsersKey}
+                                            />
+
+                                            <button type="submit">Confirm</button>
+                                        </form>
+                                    </div>
+                                </Modal>
+                            }
                         </Route>
 
                         <Route path={`${this.props.match.path}/view/:kanji`}>

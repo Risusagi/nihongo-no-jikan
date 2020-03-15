@@ -7,6 +7,7 @@ import * as wanakana from "wanakana";
 
 import FuriganaForm from './FuriganaForm';
 import TitleComponent from '../TitleComponent';
+import Modal from '../Modal';
 
 class ReadingAssistant extends React.Component {
     state = {
@@ -14,7 +15,9 @@ class ReadingAssistant extends React.Component {
         katakanaTranscription: true,
         convertedText: {
             __html: ''
-        }
+        },
+        displayModal: false,
+        modalText: ''
     }
 
     // initialize kuroshiro converter
@@ -25,6 +28,13 @@ class ReadingAssistant extends React.Component {
 
     componentDidMount = () => {
         this.initializeKuroshiro();
+
+        // hide modal on esc press
+        window.addEventListener('keydown', this.handleKeyDown);
+    }
+
+    componentWillUnmount = () => {
+        window.removeEventListener('keydown', this.handleKeyDown);
     }
 
     // handle onchange even of checkbox and textarea inside FuriganaForm
@@ -58,7 +68,8 @@ class ReadingAssistant extends React.Component {
     handleConvertion = async (text, createKatakanaTranscription) => {
         // if given text isn't in japanese don't try to convert it
         if (!Kuroshiro.Util.hasJapanese(text)) {
-            alert("Given text doesn't contain Japanese");
+            this.setModal(`Given text doesn't contain Japanese`);
+
             return;
         }
 
@@ -118,6 +129,25 @@ class ReadingAssistant extends React.Component {
         return codeToChange.replace(/\n(?!<\/rt>)/g, '</p> <p>');
     }
 
+    // set modal's text and enable its rendering
+    setModal = (text) => {
+        this.setState({
+            displayModal: true,
+            modalText: text
+        });
+    }
+
+    hideModal = () => {
+        this.setState({
+            displayModal: false
+        });
+    }
+
+    // hide modal on esc press
+    handleKeyDown = (e) => {
+        if (e.keyCode === 27) this.hideModal();
+    }
+
     render = () => {
         return (
             <>
@@ -129,6 +159,7 @@ class ReadingAssistant extends React.Component {
                         renderConvertedText={this.renderConvertedText}
                         text={this.state.text}
                         katakanaTranscription={this.state.katakanaTranscription}
+                        setModal={this.setModal}
                     />
 
                     {/* output div */}
@@ -140,6 +171,17 @@ class ReadingAssistant extends React.Component {
                     </div>
                     
                 </div>
+
+                {
+                    this.state.displayModal &&
+                    <Modal
+                        hideModal={this.hideModal}
+                    >
+                        <div className="modal-body">
+                            {this.state.modalText}
+                        </div>
+                    </Modal>
+                 }
             </>
         );
     }

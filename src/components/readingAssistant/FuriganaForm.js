@@ -13,7 +13,8 @@ const FuriganaForm = (props) => {
     // convert text to speech, uses Responsice voice library (applied by URL)
     const handleTextReading = () => {
         if (!process.env.REACT_APP_RESPONSIVEVOICES_KEY) {
-            alert(`Unfortunatelly this function isn't available at this moment`)
+            props.setModal(`Unfortunately, this function isn't available at this moment`);
+
             return;
         }
 
