@@ -13,6 +13,7 @@
 @import './readingAssistant.scss';
 @import './homePage.scss';
 @import './page404.scss';
+@import './modal.scss';
 
 * {
     color: $text-color;
@@ -71,6 +72,8 @@ ul {
 
 .spiner-container {
     @include fullCenter();
+    
+    padding-top: 50px;
 }
 
 .spiner {
