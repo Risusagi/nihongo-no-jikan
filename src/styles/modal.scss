@@ -80,6 +80,20 @@ $size: 25px;
         border-radius: 5px;
         float: right;
     }
+
+    .homepage-btn {
+        @include btn();
+        @include fullCenter();
+
+        float: right;
+        width: 100px;
+        height: 38px;
+        margin-right: 12px;
+        border-radius: 5px;
+        
+        color: $text-color;
+        text-decoration: none;
+    }
 }
 
 @media (min-width: 520px) {

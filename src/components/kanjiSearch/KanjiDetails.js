@@ -13,21 +13,36 @@ class KanjiDetails extends Component {
         this.state = {
             characterData: data,
             playing: false
-        }
+        };
     }
 
     componentDidMount = async () => {
         // send request for data if it wan't get from the search page
         // for example if user typed page URL manualy
         if (!this.state.characterData) {
-            const result = await kanjiAlive.get(`/kanji/${this.props.match.params.kanji}`);
-            
-            this.setState({
-                characterData: result.data
-            });
+            this.getData();
         }
 
         this.props.resetKanjiSearch();
+    }
+
+    componentDidUpdate = () => {
+        if (this.props.APIKey !== null) this.getData();
+    }
+
+    getData = async () => {
+        try {
+            const result = await kanjiAlive(this.props.APIKey).get(`/kanji/${this.props.match.params.kanji}`);
+
+            this.setState({
+                characterData: result.data
+            });
+        } catch (err) {
+            // render modal if kanjiAlive API key isn't valid
+            if (err.request.status === 401) {
+                this.props.renderModal();
+            }
+        }
     }
 
     // render video element with source tags for all available versions of video format except poster
@@ -70,10 +85,16 @@ class KanjiDetails extends Component {
     }
 
     render() {
+        // render modal if kanjiAlive key isn't available and modal isn't rendered
+        if (!this.props.displayModal && !this.props.APIKey) {
+            this.props.renderModal();
+        }
+
         if (this.state.characterData) {
             const { kanji, radical, references, examples } = this.state.characterData;
             
             const meaningForm = kanji.meaning.english.indexOf(',') === -1 ? 'meaning' : 'meanings';
+            const radicalChar = radical.animation.slice(-1);
 
             return (
                 <div className="kanji-details">
@@ -86,19 +107,31 @@ class KanjiDetails extends Component {
                                     <th>on</th>
                                     <td>
                                         <span lang="ja-jp">{kanji.onyomi.katakana}</span>
-                                        <span className="romaji-transcription"> ({kanji.onyomi.romaji})</span>
+                                        {
+                                            kanji.onyomi.romaji !== 'n/a' &&
+                                            <span className="romaji-transcription"> ({kanji.onyomi.romaji})</span>
+                                        }
                                     </td>    
                                 </tr>
                                 <tr>
                                     <th>kun</th>
                                     <td>
                                         <span lang="ja-jp">{kanji.kunyomi.hiragana}</span>
-                                        <span className="romaji-transcription"> ({kanji.kunyomi.romaji})</span>
+                                        {
+                                            kanji.kunyomi.romaji !== 'n/a' &&
+                                            <span className="romaji-transcription"> ({kanji.kunyomi.romaji})</span>
+                                        }
                                         </td>
                                 </tr>
                                 <tr>
                                     <th>radical</th>
-                                    <td lang="ja-jp">{radical.character}</td>
+                                    <td lang="ja-jp" className="radical-char-td">
+                                        {
+                                            radical.character.charCodeAt(0) !== 59158 ?
+                                            radical.character :
+                                            <img src={`${radicalChar}`} alt="Radical character" />
+                                        }
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>{meaningForm}</th>

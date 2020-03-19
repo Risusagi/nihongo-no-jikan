@@ -22,6 +22,7 @@ const KanjiPreview = (props) => {
     }
 
     const meaningForm = meanings.indexOf(',') === -1 ? 'meaning' : 'meanings';
+    const radicalChar = radical.animation.slice(-1);
 
     return (
         <li className="kanji-preview">
@@ -31,7 +32,11 @@ const KanjiPreview = (props) => {
                 </div>
 
                 <div lang="ja-jp">
-                    {radical}
+                    {
+                        radical.character.charCodeAt(0) !== 59158 ?
+                        radical.character :
+                        <img src={`${radicalChar}`} className="radical" alt="Radical character" />
+                    }
                 </div>
 
                 <div>

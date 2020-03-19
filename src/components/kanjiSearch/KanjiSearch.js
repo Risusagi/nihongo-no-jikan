@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Link } from 'react-router-dom';
 import kanjiAlive from './kanjiAlive';
 import KanjiPreview from './KanjiPreview';
 import KanjiDetails from './KanjiDetails';
@@ -14,7 +14,7 @@ class KanjiSearch extends React.Component {
         results: [],
         noResults: false,
         showSpiner: false,
-        APIKey: process.env.REACT_APP_KANJIALIVE_KEY,
+        APIKey: process.env.REACT_APP_KANJIALIVE_KEY || localStorage.getItem('APIKey'),
         usersKey: '',
         displayModal: false
     }
@@ -30,6 +30,13 @@ class KanjiSearch extends React.Component {
         this.renderSearchResults(JSON.parse(sessionStorage.getItem('results')) || []);
 
         window.addEventListener('keydown', this.handleKeyDown);
+
+        // render modal if kanjiAlive key isn't available
+        if (!this.state.APIKey) {
+            this.setState({
+                displayModal: true
+            });
+        }
     }
 
     componentWillUnmount = () => {
@@ -54,15 +61,6 @@ class KanjiSearch extends React.Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
-
-        // ask user for key for kanji alive API, would be deleted after a server creation
-        if (!this.state.APIKey) {
-            this.setState({
-                displayModal: true
-            });
-
-            return;
-        }
 
         try {
             this.setState({
@@ -102,12 +100,15 @@ class KanjiSearch extends React.Component {
 
             // save inquiry
             sessionStorage.setItem('inquiry', this.state.inquiry.toLowerCase());
+
+            // save key for kanjiAlive API if it is valid
+            localStorage.setItem('APIKey', this.state.APIKey);
         } catch (err) {
             // if user's API key isn't valid
             if (err.request.status === 401) {
                 this.setState({
                     usersKey: '',
-                    APIKey: '',
+                    APIKey: null,
                     displayModal: true,
                     showSpiner: false
                 });
@@ -135,7 +136,7 @@ class KanjiSearch extends React.Component {
             return (
                 <KanjiPreview
                     kanji={kanji.character}
-                    radical={radical.character}
+                    radical={radical}
                     strokes={kanji.strokes.count}
                     meanings={kanji.meaning.english}
                     onyomi={kanji.onyomi.katakana}
@@ -183,8 +184,9 @@ class KanjiSearch extends React.Component {
     handleAPIKey = (e) => {
         e.preventDefault();
 
+        // null is needed to prevent empty string saving
         this.setState(prevState => ({
-            APIKey: prevState.usersKey,
+            APIKey: prevState.usersKey || null,
             displayModal: false
         }));
     }
@@ -198,12 +200,20 @@ class KanjiSearch extends React.Component {
         });
     }
 
+    renderModal = () => {
+        this.setState({
+            usersKey: '',
+            APIKey: null,
+            displayModal: true
+        });
+    }
+
     // hide modal without saving key
     hideModal = () => {
         this.setState({
-            displayModal: false,
             usersKey: '',
-            APIKey: ''
+            APIKey: null,
+            displayModal: false
         });
     }
 
@@ -268,39 +278,44 @@ class KanjiSearch extends React.Component {
                                     )
                                 }
                             </>    
-                            
-                            {
-                                this.state.displayModal &&
-                                <Modal
-                                    hideModal={this.hideModal}
-                                >
-                                    <div className="modal-body with-btn">
-                                        <p>Unfortunately, this page is available only with an authorization key. You can get it after registration on <a href="https://rapidapi.com/KanjiAlive/api/learn-to-read-and-write-japanese-kanji" target="blank">Kanji Alive page</a>. The key is placed in X-RapidAPI-Key line.</p>
-
-                                        <form
-                                            onSubmit={this.handleAPIKey}
-                                        >
-                                            <input
-                                                type="text"
-                                                placeholder="Key"
-                                                value={this.state.usersKey}
-                                                onChange={this.handleUsersKey}
-                                            />
-
-                                            <button type="submit">Confirm</button>
-                                        </form>
-                                    </div>
-                                </Modal>
-                            }
                         </Route>
 
                         <Route path={`${this.props.match.path}/view/:kanji`}>
                             <KanjiDetails
                                 allCharacters={this.state.data}
                                 resetKanjiSearch={this.fullReset}
+                                APIKey={this.state.APIKey}
+                                displayModal={this.state.displayModal}
+                                renderModal={this.renderModal}
                             />
                         </Route>
                     </Switch>
+
+                    {
+                        this.state.displayModal &&
+                        <Modal
+                            hideModal={this.hideModal}
+                        >
+                            <div className="modal-body with-btn">
+                                <p>Unfortunately, this page is available only with an authorization key. You can get it after registration on <a href="https://rapidapi.com/KanjiAlive/api/learn-to-read-and-write-japanese-kanji" target="blank">Kanji Alive page</a>. The key is placed in X-RapidAPI-Key line.</p>
+
+                                <form
+                                    onSubmit={this.handleAPIKey}
+                                >
+                                    <input
+                                        type="text"
+                                        placeholder="Key"
+                                        value={this.state.usersKey}
+                                        onChange={this.handleUsersKey}
+                                    />
+
+                                    <button type="submit">Confirm</button>
+                                    
+                                    <Link to="/" className="homepage-btn">Homepage</Link>
+                                </form>
+                            </div>
+                        </Modal>
+                    }
                 </div>
             </>
         );
