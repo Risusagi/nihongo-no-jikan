@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
+import axios from 'axios';
 import kanjiAlive from './kanjiAlive';
 import KanjiPreview from './KanjiPreview';
 import KanjiDetails from './KanjiDetails';
@@ -7,6 +8,8 @@ import TitleComponent from '../TitleComponent';
 import Modal from '../Modal';
 
 class KanjiSearch extends React.Component {
+    signal = axios.CancelToken.source();
+
     state = {
         inquiry: '',
         searchMode: 'english',
@@ -40,6 +43,9 @@ class KanjiSearch extends React.Component {
     }
 
     componentWillUnmount = () => {
+        // cancel API request
+        this.signal.cancel();
+
         sessionStorage.clear();
 
         window.removeEventListener('keydown', this.handleKeyDown);
@@ -74,13 +80,16 @@ class KanjiSearch extends React.Component {
                 const data = await kanjiAlive(this.state.APIKey).get('/search/advanced', {
                     params: {
                         kem: this.state.inquiry.toLowerCase()
-                    }
+                    },
+                    cancelToken: this.signal.token
                 });
                 
                 // request for more data about every kanji got previously
                 const fullData = await Promise.all(
                     data.data.map(async set => {
-                        const kanji = await kanjiAlive(this.state.APIKey).get(`/kanji/${set.kanji.character}`);
+                        const kanji = await kanjiAlive(this.state.APIKey).get(`/kanji/${set.kanji.character}`, {
+                            cancelToken: this.signal.token
+                        });
 
                         return kanji.data;    
                     })
@@ -92,7 +101,9 @@ class KanjiSearch extends React.Component {
             } else {
                 // search by kanji returns full information about one kanji
                 // return object with error property that contains message that search wasn't successful
-                const data = await kanjiAlive(this.state.APIKey).get(`/kanji/${this.state.inquiry}`);
+                const data = await kanjiAlive(this.state.APIKey).get(`/kanji/${this.state.inquiry}`, {
+                    cancelToken: this.signal.token
+                });
 
                 this.renderSearchResults([data.data]);
                 if(!data.data.error) sessionStorage.setItem('results', JSON.stringify([data.data]));
@@ -104,8 +115,11 @@ class KanjiSearch extends React.Component {
             // save key for kanjiAlive API if it is valid
             localStorage.setItem('APIKey', this.state.APIKey);
         } catch (err) {
-            // if user's API key isn't valid
-            if (err.request.status === 401) {
+            if (axios.isCancel(err)) {
+                // stop if request was canceled
+                return;
+            } else if (err.request.status === 401) {
+                // if user's API key isn't valid
                 this.setState({
                     usersKey: '',
                     APIKey: null,

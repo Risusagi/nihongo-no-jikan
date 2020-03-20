@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 import kanjiAlive from './kanjiAlive';
 import ExamplesTable from './ExamplesTable';
 
 class KanjiDetails extends Component {
     constructor(props) {
         super(props);
+        
+        this.signal = axios.CancelToken.source();
         
         // select kanji that was selected from all that were found
         const data = this.props.allCharacters.find(char => char.kanji.character === this.props.match.params.kanji);
@@ -27,19 +30,29 @@ class KanjiDetails extends Component {
     }
 
     componentDidUpdate = () => {
-        if (this.props.APIKey !== null) this.getData();
+        if (this.props.APIKey !== null && !this.state.characterData) this.getData();
+    }
+
+    componentWillUnmount = () => {
+        // cancel API request
+        this.signal.cancel();
     }
 
     getData = async () => {
         try {
-            const result = await kanjiAlive(this.props.APIKey).get(`/kanji/${this.props.match.params.kanji}`);
+            const result = await kanjiAlive(this.props.APIKey).get(`/kanji/${this.props.match.params.kanji}`, {
+                cancelToken: this.signal.token
+            });
 
             this.setState({
                 characterData: result.data
             });
         } catch (err) {
-            // render modal if kanjiAlive API key isn't valid
-            if (err.request.status === 401) {
+            if (axios.isCancel(err)) {
+                // stop if request was canceled
+                return;
+            } else if (err.request.status === 401) {
+                // render modal if kanjiAlive API key isn't valid
                 this.props.renderModal();
             }
         }
