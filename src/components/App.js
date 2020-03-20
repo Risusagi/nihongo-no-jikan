@@ -10,11 +10,14 @@ import KanjiSearch from './kanjiSearch/KanjiSearch';
 import RomajiConverter from './romajiConverter/RomajiConverter';
 import ReadingAssistant from './readingAssistant/ReadingAssistant';
 import Page404 from './Page404';
+import ScrollToTop from './ScrollToTop';
 
 const App = () => {
     return (
         <Router basename="/">
             <>
+                <ScrollToTop />
+                
                 <Nav />
                 <div className="content">
                     <Switch>
