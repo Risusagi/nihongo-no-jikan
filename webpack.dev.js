@@ -47,7 +47,8 @@ module.exports = (env) => {
         ],
         devServer: {
             hot: true,
-            historyApiFallback: true
+            historyApiFallback: true,
+            host: dotenv.config().parsed.IP
         }
     });
 };
