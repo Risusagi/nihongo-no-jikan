@@ -224,11 +224,12 @@ class KanjiSearch extends React.Component {
 
     // hide modal without saving key
     hideModal = () => {
-        this.setState({
-            usersKey: '',
-            APIKey: null,
-            displayModal: false
-        });
+        if (this.state.displayModal) {
+            this.setState({
+                usersKey: '',
+                displayModal: false
+            });
+        }
     }
 
     //hide modal on esc press
