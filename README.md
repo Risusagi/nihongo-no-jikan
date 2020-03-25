@@ -22,12 +22,15 @@ The third tool is a kanji dictionary called Kanji search. Here users can search 
 The last step is Reading assistant. Its main goal is to help users to exercise their ability to read in Japanese. Text provided by a user gots transcription that is added above the main characters. Transcription called furigana normally is used for complicated kanji characters or in books for people studying Japanese. Here it is added for all kanji and katakana characters. Transcription for katakana can be switched off if a user doesn't need it.
 
 ## Screenshots
-<img src="./screenshots/katakana-table.jpg">
-<img src="./screenshots/quiz-card.jpg">
-<img src="./screenshots/quiz-wrong-answer.jpg">
-<img src="./screenshots/romaji-converter.jpg">
-<img src="./screenshots/kanji-search.jpg">
-<img src="./screenshots/reading-assistant.jpg">
+
+
+<img src="./screenshots/m.quiz-card.jpg" width="45%" align="left">
+<img src="./screenshots/m.quiz-card-keyboard.jpg" width="45%" align="right">
+
+<img src="./screenshots/break.png">
+<img src="./screenshots/pc.romaji-converter.jpg">
+<img src="./screenshots/pc.kanji-search.jpg">
+<img src="./screenshots/pc.kanji-details.jpg">
 
 ## Technologies
 * React.js
@@ -36,10 +39,13 @@ The last step is Reading assistant. Its main goal is to help users to exercise t
 * SCSS
 * HTML
 * Webpack 4
+* Axios
+* RWD
 * [kuroshiro](https://github.com/hexenq/kuroshiro)
 * [kuroshiro-analyzer-kuromoji](https://github.com/hexenq/kuroshiro-analyzer-kuromoji)
 * [WanaKana](https://github.com/WaniKani/WanaKana)
 * [Kanji Alive](https://app.kanjialive.com/api/docs)
+* [ResponsiveVoice](https://responsivevoice.org)
 
 ## Setup
 **npm run dev** - start dev server with hot mode
