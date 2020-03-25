@@ -107,7 +107,7 @@ class KanjiDetails extends Component {
             const { kanji, radical, references, examples } = this.state.characterData;
             
             const meaningForm = kanji.meaning.english.indexOf(',') === -1 ? 'meaning' : 'meanings';
-            const radicalChar = radical.animation.slice(-1);
+            const radicalImg = radical.image;
 
             return (
                 <div className="kanji-details">
@@ -139,11 +139,7 @@ class KanjiDetails extends Component {
                                 <tr>
                                     <th>radical</th>
                                     <td lang="ja-jp" className="radical-char-td">
-                                        {
-                                            radical.character.charCodeAt(0) !== 59158 ?
-                                            radical.character :
-                                            <img src={`${radicalChar}`} alt="Radical character" />
-                                        }
+                                        <img src={`${radicalImg}`} alt="Radical character" />
                                     </td>
                                 </tr>
                                 <tr>
