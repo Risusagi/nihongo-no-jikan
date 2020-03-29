@@ -1,9 +1,16 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
-const KanjiPreview = (props) => {
-    const { kanji, radical, strokes, meanings, onyomi, kunyomi } = props;
-
+const KanjiPreview = ({
+    kanji,
+    radical,
+    strokes,
+    meanings,
+    onyomi,
+    kunyomi,
+    history,
+    match: { path }
+}) => {
     // separate strings (word/reading separated with coma and space or japanese coma) got from API into individual list items
     const prepareItems = (items) => {
         return items.split(/,/).map((item, i, arr) => {
@@ -18,7 +25,7 @@ const KanjiPreview = (props) => {
     }
 
     const showMore = () => {
-        props.history.push(`${props.match.path}/view/${kanji}`);
+        history.push(`${path}/view/${kanji}`);
     }
 
     const meaningForm = meanings.indexOf(',') === -1 ? 'meaning' : 'meanings';

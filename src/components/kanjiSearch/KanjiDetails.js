@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import kanjiAlive from './kanjiAlive';
 import ExamplesTable from './ExamplesTable';
@@ -11,7 +10,7 @@ class KanjiDetails extends Component {
         this.signal = axios.CancelToken.source();
         
         // select kanji that was selected from all that were found
-        const data = this.props.allCharacters.find(char => char.kanji.character === this.props.match.params.kanji);
+        const data = this.props.allCharacters.find(char => char.kanji.character === this.props.kanji);
 
         this.state = {
             characterData: data,
@@ -40,7 +39,7 @@ class KanjiDetails extends Component {
 
     getData = async () => {
         try {
-            const result = await kanjiAlive(this.props.APIKey).get(`/kanji/${this.props.match.params.kanji}`, {
+            const result = await kanjiAlive(this.props.APIKey).get(`/kanji/${this.props.kanji}`, {
                 cancelToken: this.signal.token
             });
 
@@ -199,4 +198,4 @@ class KanjiDetails extends Component {
     }
 };
 
-export default withRouter(KanjiDetails);
+export default KanjiDetails;

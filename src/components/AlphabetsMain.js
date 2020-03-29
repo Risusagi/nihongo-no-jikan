@@ -1,21 +1,21 @@
 import React from 'react';
-import { useRouteMatch, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import TitleComponent from './TitleComponent';
 
-const AlphabetsMain = () => {
+const AlphabetsMain = ({ match: { url } }) => {
     return (
         <>
             <TitleComponent title="Alphabets" />
 
             <ul className="alphabets-main">
                 <li>
-                    <Link to={`${useRouteMatch().url}/tabels`}>
+                    <Link to={`${url}/tabels`}>
                         Tabels
                     </Link>
                 </li>
                 
                 <li>
-                    <Link to={`${useRouteMatch().url}/test`}>
+                    <Link to={`${url}/test`}>
                         Quiz
                     </Link>
                 </li>

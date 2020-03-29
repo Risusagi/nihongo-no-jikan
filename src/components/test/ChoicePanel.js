@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
 
 class ChoicePanel extends React.Component {
     constructor(props) {
@@ -116,4 +115,4 @@ class ChoicePanel extends React.Component {
     }
 }
 
-export default withRouter(ChoicePanel);
+export default ChoicePanel;

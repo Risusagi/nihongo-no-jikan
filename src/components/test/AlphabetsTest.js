@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, Route, useRouteMatch} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Card from './Card';
 import ChoicePanel from './ChoicePanel';
 import ResultBoard from './ResultBoard';
 import Page404 from '../Page404';
 import TitleComponent from '../TitleComponent';
 
-const AlphabetsTest = (props) => {
+const AlphabetsTest = ({ history, match: { path } }) => {
     const [score, setScore] = useState(0);
     const [currentQuestion, setProgress] = useState(0);
     const [characters, setCharactersList] = useState([{char: '', mode: ''}]);
     const [showAnswer, setAnswerDisplay] = useState(false);
     const [vibrationEnabled, setVibration] = useState(true);
-    const match = useRouteMatch();
 
     // on component mount, every time when page was refreshed
     // values were set in ChoicePanel's componentDidMount (0, 0, [{char: '', mode: ''}]) and then can be changed
@@ -57,12 +56,12 @@ const AlphabetsTest = (props) => {
         // in case current question is the last one from the list
 
         if (lastIndex === characters.length && rightAnswer) {
-            props.history.push(`${match.path}/result`);
+            history.push(`${path}/result`);
             setScore(score + 1);
             return;
         }
         if (lastIndex === characters.length && showAnswer) {
-            props.history.push(`${match.path}/result`);
+            history.push(`${path}/result`);
             setAnswerDisplay(false);
             return;
         }
@@ -71,7 +70,7 @@ const AlphabetsTest = (props) => {
         // set progress here to not display next card before switch to next page
         if (showAnswer) {
             setProgress(currentQuestion + 1);
-            props.history.push(`${match.path}/q/${lastIndex + 1}`);
+            history.push(`${path}/q/${lastIndex + 1}`);
             setAnswerDisplay(false);
             return;
         }
@@ -82,7 +81,7 @@ const AlphabetsTest = (props) => {
         if (rightAnswer) {
             setScore(score + 1);
             setProgress(currentQuestion + 1);
-            props.history.push(`${match.path}/q/${lastIndex + 1}`);
+            history.push(`${path}/q/${lastIndex + 1}`);
         } else {
             setAnswerDisplay(true);
 
@@ -156,14 +155,22 @@ const AlphabetsTest = (props) => {
         <>
             <TitleComponent title="Kana quiz" />
             
-            <Route path={`${match.path}`} exact>
-                <ChoicePanel
-                    switchToTest={prepareCharactersSet}
-                    clearStatistics={clearStatistics}
-                />
+            <Route
+                exact
+                path={`${path}`}
+                render={({ history }) => {
+                    return (
+                        <ChoicePanel
+                            history={history}
+                            switchToTest={prepareCharactersSet}
+                            clearStatistics={clearStatistics}
+                        />
+                    );
+                }}
+            >
             </Route>
 
-            <Route path={`${match.path}/q/:index`}>
+            <Route path={`${path}/q/:index`}>
                 {
                     characters[0].char ? (
                     /* card with current question */
@@ -186,11 +193,11 @@ const AlphabetsTest = (props) => {
                 
             </Route>
             
-            <Route path={`${match.path}/result`}>
+            <Route path={`${path}/result`}>
                 <ResultBoard score={score} max={characters.length}/>
             </Route>
         </>
     );
 };
 
-export default withRouter(AlphabetsTest);
+export default AlphabetsTest;

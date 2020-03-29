@@ -238,29 +238,36 @@ class KanjiSearch extends React.Component {
     }
 
     render() {
+        const { match: { path } } = this.props;
+        const { inquiry, searchMode, data, results, noResults, showSpiner, APIKey, usersKey, displayModal } = this.state;
+
         return (
             <>
                 <TitleComponent title="Kanji search" />
                 
                 <div className="kanji-search-container">
                     <Switch>
-                        <Route path={`${this.props.match.path}`} exact>
+                        <Route path={`${path}`} exact>
                             <form
                                 onSubmit={this.handleSubmit}
                             >
                                 <div className="search-block">
                                     <input
                                         type="text"
-                                        value={this.state.inquiry}
+                                        value={inquiry}
                                         onChange={this.handleChange}
                                     />
                                 
-                                    <svg role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" onClick={this.handleReset} tabIndex="0">
+                                    <svg
+                                        role="img" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        onClick={this.handleReset}
+                                        tabIndex="0"
+                                    >
                                         <path d="M6.34314575 6.34314575L17.6568542 17.6568542M6.34314575 17.6568542L17.6568542 6.34314575" />
                                     </svg>
 
                                     <select
-                                        value={this.state.searchMode}
+                                        value={searchMode}
                                         onChange={this.handleChange}
                                     >
                                         <option value="english">
@@ -278,32 +285,38 @@ class KanjiSearch extends React.Component {
 
                             {/* // if nothing was found display message about lack of answers for user's request */}
                             <>
-                                {this.state.showSpiner ? (
+                                {showSpiner ? (
                                         <div className="spiner-container">
                                             <div className="spiner"></div>
                                         </div>
-                                    ) : this.state.noResults ? (
+                                    ) : noResults ? (
                                         <div className="no-results">
                                             <span>Nothing found</span>
                                         </div>
                                     ) : (
                                         <ul className="kanji-search-results">
-                                            {this.state.results}
+                                            {results}
                                         </ul>
                                     )
                                 }
                             </>    
                         </Route>
 
-                        <Route path={`${this.props.match.path}/view/:kanji`}>
-                            <KanjiDetails
-                                allCharacters={this.state.data}
-                                resetKanjiSearch={this.fullReset}
-                                APIKey={this.state.APIKey}
-                                displayModal={this.state.displayModal}
-                                renderModal={this.renderModal}
-                            />
-                        </Route>
+                        <Route
+                            path={`${path}/view/:kanji`}
+                            render={({ match: { params } }) => {
+                                return (
+                                    <KanjiDetails
+                                        kanji={params.kanji}
+                                        allCharacters={data}
+                                        resetKanjiSearch={this.fullReset}
+                                        APIKey={APIKey}
+                                        displayModal={displayModal}
+                                        renderModal={this.renderModal}
+                                    />
+                                );
+                            }}
+                        />
                     </Switch>
 
                     {
@@ -320,7 +333,7 @@ class KanjiSearch extends React.Component {
                                     <input
                                         type="text"
                                         placeholder="Key"
-                                        value={this.state.usersKey}
+                                        value={usersKey}
                                         onChange={this.handleUsersKey}
                                     />
 
